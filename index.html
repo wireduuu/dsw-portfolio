@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Derrick Sarfo Wiredu's portfolio – Developer, Designer, Blogger from Ghana. Explore my projects, skills, and resume."
+    />
+    <meta
+      name="keywords"
+      content="Derrick Sarfo Wiredu, Portfolio, Developer, Designer, UMaT, Blog, Certified_Blogz, Java, Python, Flask, MongoDB"
+    />
+    <meta name="author" content="Derrick Sarfo Wiredu" />
+    <meta property="og:title" content="Derrick Sarfo Wiredu | Portfolio" />
+    <meta
+      property="og:description"
+      content="Developer • Designer • Blogger | View my latest projects and resume."
+    />
+    <meta property="og:image" content="link-to-preview-image.jpg" />
+    <meta property="og:url" content="https://your-portfolio-url.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Derrick Sarfo Wiredu | Portfolio</title>
+    <link rel="icon" type="image/jpg" href="assets/images/favicon.jpg" />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS (CDN) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- AOS (Animate On Scroll) -->
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="assets/css/aos.css" />
+    <script src="assets/js/aos.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+
+    <!-- Typing animation -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+    ></script>
+
+    <!-- Swiper -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
+      defer
+    ></script>
+
+    <!-- AOS Script -->
+    <script src="src/aos.js"></script>
+
+    <!-- Font Awesome (one CDN + optional kit fallback) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <script
+      src="https://kit.fontawesome.com/YOUR-KIT-CODE.js"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <!-- Your Local Scripts -->
+    <script type="module" src="src/main.js"></script>
+
+    <!-- Badge Styling -->
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        transition: background-color 0.3s, color 0.3s;
+        overflow-x: hidden;
+      }
+
+      .badge {
+        background-color: #e0e7ff;
+        color: #4338ca;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        font-weight: 600;
+      }
+
+      .dark {
+        background-color: #1a1a1a;
+        color: #ffffff;
+      }
+
+      .dark a {
+        color: #ffffff;
+      }
+
+      .scroll-top-btn {
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .scroll-top-btn.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .dragging {
+        cursor: grabbing;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide scrollbar for Webkit (Chrome, Safari) */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+      #projectGridWrapper {
+        -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+      }
+
+      /* Hide scrollbar for IE, Edge, Firefox */
+      .scrollbar-hide {
+        -ms-overflow-style: none; /* IE & Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+
+      #projectGridWrapper {
+        scroll-snap-type: x mandatory;
+        overflow-x: auto;
+      }
+      .project-card {
+        scroll-snap-align: start;
+      }
+
+      .btn-primary {
+        @apply text-white bg-indigo-600 px-3 py-2 rounded hover:bg-indigo-700;
+      }
+
+      .btn-secondary {
+        @apply bg-gray-200 dark:bg-gray-600 px-3 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-500;
+      }
+
+      .badge {
+        @apply inline-block bg-gray-200 dark:bg-gray-600 text-sm px-2 py-1 rounded;
+      }
+
+      /* Move pagination dots downward */
+      .swiper-pagination {
+        position: relative !important; /* Override absolute */
+        bottom: auto !important; /* Disable bottom positioning */
+        margin-top: 30px !important; /* Push down */
+        text-align: center;
+        width: 100%;
+      }
+
+      /* Change color of inactive dots */
+      .swiper-pagination-bullet {
+        background-color: #a5b4fc; /* lighter indigo */
+        opacity: 0.7;
+      }
+
+      /* Change color of active dot */
+      .swiper-pagination-bullet-active {
+        background-color: #5c6ac4; /* bright indigo */
+        opacity: 1;
+      }
+
+      /* Default filter styles */
+      .skill-filter,
+      .project-filter {
+        @apply px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium transition-all duration-300 shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500;
+      }
+
+      /* Active filters in light mode */
+      .skill-filter.active,
+      .project-filter.active {
+        @apply bg-indigo-600 text-white shadow-lg;
+      }
+
+      /* Override active filters in dark mode */
+      .dark .skill-filter.active,
+      .dark .project-filter.active {
+        @apply bg-orange-500 text-white shadow-lg;
+      }
+
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Light mode - white background */
+      .projectSwiper .swiper-slide {
+        background-color: white;
+        color: text-gray-600; /* Ensures text remains visible */
+        @apply text-black;
+      }
+
+      /* Dark mode - dark background */
+      .dark .projectSwiper .swiper-slide {
+        color: white;
+      }
+      /* --- Fade-In Keyframes (with scale + translate) --- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95) translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      /* --- Fade-Out Keyframes (for removing slides smoothly) --- */
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: scale(0.95) translateY(20px);
+        }
+      }
+
+      /* --- Slide Base Animation State --- */
+      .swiper-slide {
+        opacity: 0;
+        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      /* --- Staggered Animations for Visual Depth --- */
+      .swiper-slide:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .swiper-slide:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .swiper-slide:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .swiper-slide:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .swiper-slide:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .swiper-slide:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .swiper-slide:nth-child(7) {
+        animation-delay: 0.35s;
+      }
+
+      /* --- Optional: Reusable Utility Classes --- */
+      .fade-in {
+        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      .fade-out {
+        animation: fadeOut 0.4s ease-in-out forwards;
+        pointer-events: none;
+      }
+
+      #skillsGrid > div {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+
+      #skillsGrid > div:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 12px 20px rgba(99, 102, 241, 0.25); /* Indigo-ish shadow */
+      }
+
+      .proficiency-bar {
+        transition: width 1.2s ease-in-out;
+      }
+
+      .proficiency-bar {
+        background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
+      }
+
+      .dark .proficiency-bar {
+        background-color: #f97316; /* Tailwind orange-500 for dark mode */
+      }
+
+      .proficiency-text {
+        color: rgba(99, 102, 241, 1); /* indigo for light mode */
+      }
+
+      .dark .proficiency-text {
+        color: #f97316; /* Tailwind orange-400 for dark mode */
+      }
+    </style>
+  </head>
+  <body
+    class="overflow-x-hidden bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-white scroll-smooth"
+  >
+    <!-- Back to Top Button -->
+    <button
+      onclick="scrollToTop()"
+      id="scrollToTopBtn"
+      title="Back to Top"
+      class="fixed bottom-6 right-6 z-[9999] bg-indigo-600 hover:bg-indigo-700 text-white text-xl p-3 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none dark:bg-indigo-500 dark:hover:bg-indigo-400"
+    >
+      ↑
+    </button>
+    <header
+      class="fixed top-0 w-full bg-white shadow z-50 dark:bg-gray-800 dark:text-white"
+    >
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <!-- Brand Name -->
+        <h1 class="text-xl font-bold text-indigo-600 dark:text-white">
+          Derrick S. Wiredu
+        </h1>
+
+        <!-- Hamburger Button (for mobile) -->
+        <button
+          id="menu-toggle"
+          aria-label="Toggle mobile menu"
+          class="md:hidden text-gray-700 dark:text-white focus:outline-none"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden h-12 md:flex items-center space-x-4 text-sm font-semibold"
+        >
+          <a
+            href="#home"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >Home</a
+          >
+          <a
+            href="#about-resume"
+            class="text-gray-800 dark:text-white font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >About</a
+          >
+          <a
+            href="#projects"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >Projects</a
+          >
+          <a
+            href="#skills"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >Skills</a
+          >
+          <!-- <a
+            href="#resume"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >Resume</a
+          > -->
+          <a
+            href="#contact"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >Contact</a
+          >
+
+          <!-- Dark Mode Toggle (Desktop) -->
+          <button
+            id="theme-toggle"
+            aria-label="Toggle dark mode"
+            class="ml-4 px-2 py-1 border rounded text-sm text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center gap-2"
+          >
+            <i id="theme-icon" class="fas fa-moon"></i>
+            <span id="theme-label">Dark Mode</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Mobile Navigation Menu -->
+      <div
+        id="mobile-menu"
+        class="md:hidden hidden bg-white dark:bg-gray-800 px-6 pb-4"
+      >
+        <a
+          href="#home"
+          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          >Home</a
+        >
+        <a
+          href="#about"
+          class="block py-2 text-sm text-indigo-600 dark:text-white font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          >About</a
+        >
+        <a
+          href="#projects"
+          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          >Projects</a
+        >
+        <a
+          href="#skills"
+          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          >Skills</a
+        >
+        <a
+          href="#resume"
+          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          >Resume</a
+        >
+        <a
+          href="#contact"
+          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          >Contact</a
+        >
+
+        <!-- Dark Mode Toggle (Mobile) -->
+        <button
+          id="mobile-theme-toggle"
+          aria-label="Toggle dark mode (mobile)"
+          class="mt-2 px-2 py-1 border rounded text-sm text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center gap-2"
+        >
+          <i id="mobile-theme-icon" class="fas fa-moon"></i>
+          <span id="mobile-theme-label">Dark Mode</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section
+      id="home"
+      class="relative h-screen flex items-center justify-center text-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black"
+    >
+      <div
+        class="z-10 mt-20 px-6 py-16 max-w-4xl text-gray-900 dark:text-white text-center backdrop-blur-sm bg-white/60 dark:bg-white/5 rounded-3xl border border-white/10 shadow-xl"
+        data-aos="fade-up"
+        data-aos-duration="1200"
+      >
+        <h1
+          class="text-lg sm:text-xl font-medium text-gray-600 dark:text-gray-400 mb-2"
+        >
+          Hi, I'm
+        </h1>
+        <h2
+          class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-tight"
+        >
+          <span class="text-indigo-600 dark:text-indigo-400">
+            Derrick Sarfo Wiredu
+          </span>
+        </h2>
+
+        <h3
+          class="mt-6 text-xl sm:text-2xl md:text-3xl text-gray-700 dark:text-gray-300 font-medium"
+        >
+          <span id="typed-text" class="text-indigo-700 dark:text-white"></span>
+        </h3>
+
+        <p
+          class="mt-6 text-md md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
+        >
+          A passionate Full-Stack Developer, UI/UX Designer, and CSE student
+          creating modern web solutions & immersive digital experiences.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+          <a
+            href="#projects"
+            class="px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-500 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-xl"
+          >
+            🚀 View Projects
+          </a>
+          <a
+            href="resume/Derrick_Sarfo_Wiredu_Resume.pdf"
+            download
+            class="px-6 py-3 border border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-200 rounded-full font-semibold transition duration-300"
+          >
+            📄 Download Resume
+          </a>
+        </div>
+      </div>
+
+      <!-- Scroll Down Button with Chevron and Pulse Animation -->
+      <div
+        class="absolute bottom-4 sm:bottom-0.5 left-1/2 transform -translate-x-1/2 z-20"
+      >
+        <a
+          href="#about-resume"
+          aria-label="Scroll down to About section"
+          class="transition-all duration-300 ease-in-out"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 animate-bounce-glow"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- About + Resume Revamped Split Section -->
+    <section
+      id="about-resume"
+      class="py-20 px-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+    >
+      <div
+        class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 relative px-4 sm:px-6 lg:px-8"
+      >
+        <!-- About Me (Left Side) -->
+        <div data-aos="fade-right" class="md:w-1/2 space-y-6 pr-4">
+          <h3
+            class="text-4xl font-semibold text-indigo-600 dark:text-orange-400"
+          >
+            About Me
+          </h3>
+          <p class="text-lg leading-relaxed text-justify">
+            Hello! I’m
+            <strong class="font-medium">Derrick Sarfo Wiredu</strong> — a
+            code-loving creative with a knack for turning raw ideas into clean,
+            user-friendly digital products.
+          </p>
+          <p class="text-lg leading-relaxed text-justify">
+            My roots? Graphic design. But somewhere between pixels and passion,
+            I discovered my love for frontend development and backend logic.
+            Today, I build full-stack web apps using tools like
+            <strong class="font-medium">HTML</strong>,
+            <strong class="font-medium">Tailwind CSS</strong>,
+            <strong class="font-medium">JavaScript</strong>,
+            <strong class="font-medium">Flask</strong>, and
+            <strong class="font-medium">MongoDB</strong>.
+          </p>
+          <p class="text-lg leading-relaxed text-justify">
+            I’m currently pursuing a
+            <strong class="font-medium"
+              >B.Sc. in Computer Science & Engineering</strong
+            >
+            at UMaT. But trust me — my learning doesn't stop at lectures. I
+            spend late nights hacking on side projects, from smart dashboards to
+            this very portfolio.
+          </p>
+          <p class="text-lg leading-relaxed text-justify">
+            I don’t just write code — I solve problems, design smooth UX, and
+            bring bold ideas to life. Whether it’s collaborating on a team or
+            shipping solo, I’m here to build things that matter.
+            <br />
+            I believe great software is born where creativity meets clean
+            engineering.
+          </p>
+          <p class="text-lg leading-relaxed text-justify">
+            Let’s connect, create, and maybe even launch the next big thing
+            together.
+          </p>
+        </div>
+
+        <!-- Vertical Divider (only visible on medium screens and up) -->
+        <div class="hidden md:flex items-stretch text-justify">
+          <div
+            class="w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent dark:via-gray-700"
+          ></div>
+        </div>
+
+        <!-- Resume (Right Side) -->
+        <div data-aos="fade-left" class="md:w-1/2 space-y-6 pl-4">
+          <h3 class="text-4xl font-bold text-indigo-600 dark:text-orange-400">
+            Resume
+          </h3>
+          <p class="text-lg text-gray-700 dark:text-gray-300">
+            A snapshot of my educational and professional journey.
+          </p>
+
+          <!-- Filter Buttons -->
+          <div class="flex gap-4 flex-wrap">
+            <button
+              class="resume-filter-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500"
+              data-filter="major"
+            >
+              Major Highlights
+            </button>
+            <button
+              class="resume-filter-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500"
+              data-filter="education"
+            >
+              Education
+            </button>
+            <button
+              class="resume-filter-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500"
+              data-filter="work"
+            >
+              Work
+            </button>
+            <button
+              class="resume-filter-btn px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500"
+              data-filter="achievements"
+            >
+              Achievements
+            </button>
+          </div>
+
+          <!-- Resume Cards -->
+          <div class="space-y-4" id="resumeCards">
+            <!-- Major Highlight: Internship -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="major"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                Frontend Developer & UI/UX Intern
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Ideation Axis | Oct 2024 – Dec 2024
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Contributed to real-world web app development, frontend UI
+                components, and collaborated on agile product workflows.
+              </p>
+            </div>
+
+            <!-- Major Highlight: Frontend + UI/UX + Graphics -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="major"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                Frontend Developer & Visual Designer
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Freelance | 2022 – Present
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Specialized in HTML, CSS, Tailwind, and JavaScript with modern
+                UI/UX, responsive layouts, and polished graphics using Figma and
+                Photoshop.
+              </p>
+            </div>
+
+            <!-- Major Highlight: Degree -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="major"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                B.Sc. Computer Science & Engineering
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                UMaT, Tarkwa | 2022 – Present
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Specialized in software engineering, databases, and intelligent
+                systems.
+              </p>
+            </div>
+
+            <!-- Major Highlight: Blogger at Opera News -->
+            <!-- <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="major"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                Freelance Blogger
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Opera News Hub | 2020 – Present
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Published engaging tech, lifestyle, and trending content to
+                reach thousands of readers, focusing on SEO and headline
+                psychology.
+              </p>
+            </div> -->
+
+            <!-- Education -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="education"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                B.Sc. Computer Science & Engineering
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                UMaT, Tarkwa | 2022 – Present
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Specialized in software engineering, databases, and intelligent
+                systems.
+              </p>
+            </div>
+
+            <!-- SHS -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="education"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                General Science – WASSCE
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Odorgonno Senior High School, Accra | 2019 – 2022
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Studied Physics, Chemistry, Elective Mathematics, and Biology as
+                a strong foundation for a STEM career.
+              </p>
+            </div>
+
+            <!-- Work -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="work"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                Freelance Web & Graphics Designer
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Remote | 2021 – Present
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Crafted websites, branding, and user-centric visuals for global
+                clients.
+              </p>
+            </div>
+
+            <!-- Achievements -->
+            <div
+              class="resume-card bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md transition hover:shadow-xl transform hover:scale-105"
+              data-category="achievements"
+            >
+              <h4
+                class="text-xl font-semibold text-indigo-600 dark:text-orange-400"
+              >
+                Blogger & Digital Publisher
+              </h4>
+              <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">
+                Certified_Blogz | 2020 – Present
+              </span>
+              <p class="text-gray-700 dark:text-gray-300 text-sm">
+                Managing a blog focused on SEO, digital trends, and tech
+                storytelling.
+              </p>
+            </div>
+          </div>
+
+          <!-- Resume Buttons -->
+          <div class="flex gap-4 pt-6 flex-wrap">
+            <button
+              id="openResumeModal"
+              class="bg-indigo-600 dark:bg-orange-500 text-white px-6 py-2 rounded hover:bg-indigo-700 dark:hover:bg-orange-400 transition"
+            >
+              Preview Resume
+            </button>
+            <a
+              href="resume/Derrick_Sarfo_Wiredu_Resume.pdf"
+              download
+              class="border-2 border-indigo-600 dark:border-orange-500 text-indigo-600 dark:text-orange-400 px-6 py-2 rounded hover:bg-indigo-100 dark:hover:bg-gray-800 transition"
+              >Download</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        id="resumeModal"
+        class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center hidden"
+      >
+        <div
+          class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 shadow-lg relative"
+        >
+          <button
+            id="closeResumeModal"
+            class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 text-2xl"
+          >
+            &times;
+          </button>
+          <div class="p-4 border-b border-gray-300 dark:border-gray-700">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+              My Resume
+            </h2>
+          </div>
+          <div class="h-[75vh]">
+            <iframe
+              id="resumeIframe"
+              width="100%"
+              height="100%"
+              class="border-none hidden"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section
+      id="projects"
+      class="py-20 px-6 bg-gray-100 dark:bg-gray-800 dark:text-gray-100"
+      data-aos="fade-up"
+      data-aos-duration="800"
+    >
+      <div class="max-w-7xl mx-auto">
+        <h2
+          class="text-4xl font-bold text-center mb-4 text-indigo-600 dark:text-white"
+        >
+          Featured Projects
+        </h2>
+        <p class="text-center mb-10 text-lg text-gray-500 dark:text-gray-400">
+          A selection of my most impactful works—ranging from web systems to
+          immersive virtual experiences.
+        </p>
+
+        <!-- Filter Buttons -->
+        <div class="flex justify-center gap-4 flex-wrap mb-12">
+          <button class="project-filter active" data-category="all">
+            All Projects
+          </button>
+          <button class="project-filter" data-category="web">Web</button>
+          <button class="project-filter" data-category="mobile">Mobile</button>
+          <button class="project-filter" data-category="3D graphics">
+            3D Graphics
+          </button>
+          <button class="project-filter" data-category="design">Design</button>
+        </div>
+
+        <!-- Swiper Container -->
+        <div class="swiper projectSwiper">
+          <div class="swiper-wrapper text-gray-600" id="projectGrid">
+            <!-- Slides injected dynamically -->
+          </div>
+
+          <!-- Navigation Arrows -->
+          <div
+            class="swiper-button-prev text-indigo-600 dark:text-orange-400"
+          ></div>
+          <div
+            class="swiper-button-next text-indigo-600 dark:text-orange-400"
+          ></div>
+
+          <!-- Optional Pagination -->
+          <div
+            class="swiper-pagination !bg-transparent !text-gray-800 dark:!text-white"
+          ></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section
+      id="skills"
+      class="py-20 px-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+    >
+      <div class="max-w-6xl mx-auto">
+        <h2
+          class="text-4xl font-bold text-center mb-4 text-indigo-600 dark:text-white"
+        >
+          Skills & Expertise
+        </h2>
+        <p class="text-center mb-10 text-lg text-gray-500 dark:text-gray-400">
+          A comprehensive overview of my technical skills and proficiency
+          levels.
+        </p>
+
+        <!-- Filter Buttons -->
+        <div class="flex justify-center gap-4 flex-wrap mb-12">
+          <button class="skill-filter active" data-category="all">
+            All Skills
+          </button>
+          <button class="skill-filter" data-category="frontend">
+            Frontend
+          </button>
+          <button class="skill-filter" data-category="backend">Backend</button>
+          <button class="skill-filter" data-category="design">Design</button>
+          <button class="skill-filter" data-category="tools">Tools</button>
+        </div>
+
+        <!-- Skills Grid -->
+        <div
+          id="skillsGrid"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 transition-all duration-500"
+        >
+          <!-- Cards will be injected here via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!--
+    -- Resume --
+    <section
+      id="resume"
+      class="py-20 px-6 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100"
+      data-aos="fade-up"
+    >
+      <div class="max-w-5xl mx-auto">
+        <h2
+          class="text-4xl font-bold text-center mb-6 text-indigo-600 dark:text-orange-400"
+        >
+          Resume
+        </h2>
+        <p class="text-center mb-10 text-lg text-gray-600 dark:text-gray-400">
+          A brief look at my educational and professional journey.
+        </p>
+
+        -- Timeline --
+        <div
+          class="relative border-l border-indigo-400 dark:border-orange-500 ml-4 space-y-10"
+        >
+          -- Item 1 --
+          <div class="relative pl-8">
+            <div
+              class="absolute top-1 left-[-10px] w-4 h-4 bg-indigo-500 dark:bg-orange-400 rounded-full shadow-lg"
+            ></div>
+            <h3 class="text-xl font-semibold">
+              B.Sc. Computer Science & Engineering
+            </h3>
+            <span class="text-sm text-gray-500 dark:text-gray-400"
+              >University of Mines and Technology, Tarkwa | 2022 - Present</span
+            >
+            <p class="mt-2 text-gray-700 dark:text-gray-300">
+              Currently pursuing my degree with a focus on software engineering,
+              databases, and intelligent systems.
+            </p>
+          </div>
+
+          -- Item 2 --
+          <div class="relative pl-8">
+            <div
+              class="absolute top-1 left-[-10px] w-4 h-4 bg-indigo-500 dark:bg-orange-400 rounded-full shadow-lg"
+            ></div>
+            <h3 class="text-xl font-semibold">
+              Freelance Web & Graphics Designer
+            </h3>
+            <span class="text-sm text-gray-500 dark:text-gray-400"
+              >Remote | 2021 - Present</span
+            >
+            <p class="mt-2 text-gray-700 dark:text-gray-300">
+              Design and build sleek websites, branding assets, and UI/UX
+              concepts for local and international clients.
+            </p>
+          </div>
+
+          -- Item 3 --
+          <div class="relative pl-8">
+            <div
+              class="absolute top-1 left-[-10px] w-4 h-4 bg-indigo-500 dark:bg-orange-400 rounded-full shadow-lg"
+            ></div>
+            <h3 class="text-xl font-semibold">Blogger & Digital Publisher</h3>
+            <span class="text-sm text-gray-500 dark:text-gray-400"
+              >Certified_Blogz | 2020 - Present</span
+            >
+            <p class="mt-2 text-gray-700 dark:text-gray-300">
+              Create and manage tech and lifestyle blogs, focusing on SEO,
+              analytics, and engaging news content.
+            </p>
+          </div>
+        </div>
+
+        -- Buttons --
+        <div class="mt-14 flex flex-col sm:flex-row justify-center gap-4">
+          <a
+            href="resume/Derrick_Sarfo_Wiredu_Resume.pdf"
+            target="_blank"
+            class="bg-indigo-600 dark:bg-orange-500 text-white px-6 py-3 rounded hover:bg-indigo-700 dark:hover:bg-orange-400 transition"
+          >
+            Preview Resume
+          </a>
+          <a
+            href="resume/Derrick_Sarfo_Wiredu_Resume.pdf"
+            download
+            class="bg-transparent border-2 border-indigo-600 dark:border-orange-500 text-indigo-600 dark:text-orange-400 px-6 py-3 rounded hover:bg-indigo-50 dark:hover:bg-gray-800 transition"
+          >
+            Download Resume
+          </a>
+        </div>
+      </div>
+    </section>
+  -->
+
+    <!-- Contact -->
+    <section
+      id="contact"
+      class="py-20 px-6 bg-gradient-to-b from-gray-100 to-white text-gray-900 dark:from-gray-900 dark:to-gray-700 dark:text-gray-100"
+      data-aos="fade-up"
+    >
+      <div
+        class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start"
+      >
+        <!-- Contact Info -->
+        <div class="space-y-6">
+          <h2 class="text-4xl font-extrabold mb-2">
+            Let's talk about everything!
+          </h2>
+          <p class="ttext-gray-600 dark:text-gray-400 text-lg">
+            Feel free to reach out for collaborations, opportunities, or just a
+            friendly chat. I'm always open to discussing new projects and ideas.
+          </p>
+
+          <!-- Info Cards -->
+          <div class="space-y-6">
+            <!-- Email -->
+            <div
+              class="flex items-center gap-4 bg-gray-200 dark:bg-gray-800 p-5 rounded-lg shadow-md"
+            >
+              <div class="bg-orange-500 text-white p-3 rounded-full">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Email</p>
+                <p class="font-semibold text-gray-900 dark:text-white">
+                  derricksarfowiredu@gmail.com
+                </p>
+              </div>
+            </div>
+            <!-- Phone -->
+            <div
+              class="flex items-center gap-4 bg-gray-200 dark:bg-gray-800 p-5 rounded-lg shadow-md"
+            >
+              <div class="bg-orange-500 text-white p-3 rounded-full">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Phone</p>
+                <p class="font-semibold text-gray-900 dark:text-white">
+                  +233 50 537 9537
+                </p>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div
+              class="flex items-center gap-4 bg-gray-200 dark:bg-gray-800 p-5 rounded-lg shadow-md"
+            >
+              <div class="bg-orange-500 text-white p-3 rounded-full">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Location</p>
+                <!-- updated text color -->
+                <p class="font-semibold text-gray-900 dark:text-white">
+                  Accra, Ghana
+                </p>
+                <!-- updated text color -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div
+          class="bg-gray-200 dark:bg-gray-800 p-8 rounded-lg shadow-lg space-y-6"
+        >
+          <form
+            action="https://formspree.io/f/xjkrvzap"
+            method="POST"
+            class="space-y-6"
+            id="contact-form"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  class="block mb-1 text-sm text-gray-800 dark:text-gray-200"
+                  >Name</label
+                >
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your full name"
+                  required
+                  class="w-full px-4 py-2 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+              <div>
+                <label
+                  class="block mb-1 text-sm text-gray-800 dark:text-gray-200"
+                  >Email</label
+                >
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  required
+                  class="w-full px-4 py-2 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+            </div>
+            <div>
+              <label class="block mb-1 text-sm text-gray-800 dark:text-gray-200"
+                >Subject</label
+              >
+              <input
+                type="text"
+                name="subject"
+                placeholder="e.g. Project Inquiry"
+                required
+                class="w-full px-4 py-2 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+            </div>
+            <div>
+              <label class="block mb-1 text-sm text-gray-800 dark:text-gray-200"
+                >Message</label
+              >
+              <textarea
+                name="message"
+                placeholder="Write your message here... (details, timeline, etc.)"
+                required
+                class="w-full height resize-none px-4 py-2 rounded bg-white dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                style="height: 7rem"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              class="w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-400 text-black dark:text-gray-900 font-bold rounded-lg flex items-center justify-center gap-2 hover:from-orange-600 hover:to-yellow-500 transition duration-300"
+            >
+              <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+          </form>
+          <div id="form-status" class="mt-4 text-center hidden">
+            <p id="success-message" class="text-green-600 font-semibold hidden">
+              🎉 Your message was sent successfully!
+            </p>
+            <p id="error-message" class="text-red-600 font-semibold hidden">
+              ❌ Something went wrong. Please try again.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-10 px-6"
+    >
+      <div
+        class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
+      >
+        <!-- Logo / Name -->
+        <div class="text-center md:text-left">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+            Derrick Sarfo Wiredu
+          </h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Software Engineer • Designer • Freelancer
+          </p>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="flex space-x-6 text-sm font-medium">
+          <a href="#about" class="hover:text-orange-500 transition">About</a>
+          <a href="#projects" class="hover:text-orange-500 transition"
+            >Projects</a
+          >
+          <a href="#skills" class="hover:text-orange-500 transition">Skills</a>
+          <a href="#contact" class="hover:text-orange-500 transition"
+            >Contact</a
+          >
+        </div>
+
+        <!-- Social Icons -->
+        <div class="flex space-x-4 text-xl">
+          <a
+            href="https://linkedin.com/in/derricksarfo"
+            target="_blank"
+            aria-label="LinkedIn"
+            class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+          >
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a
+            href="https://github.com/derrickwiredu"
+            target="_blank"
+            aria-label="GitHub"
+            class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+          >
+            <i class="fab fa-github"></i>
+          </a>
+          <a
+            href="mailto:derrickwiredu@gmail.com"
+            aria-label="Email"
+            class="text-gray-500 dark:text-gray-400 hover:text-red-500 transition"
+          >
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom line -->
+      <div
+        class="mt-8 text-center text-sm text-gray-500 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700 pt-4"
+      >
+        © 2025 Derrick Sarfo Wiredu. All rights reserved.
+      </div>
+    </footer>
+  </body>
+</html>
