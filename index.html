@@ -21,7 +21,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Derrick Sarfo Wiredu | Portfolio</title>
-    <link rel="icon" type="image/jpg" href="assets/images/favicon.jpg" />
+    <link rel="icon" type="image/jpg" href="src/images/favicon.jpg" />
 
     <!-- Fonts -->
     <link
@@ -36,8 +36,6 @@
     />
 
     <!-- AOS (Animate On Scroll) -->
-    <!-- AOS Animation -->
-    <link rel="stylesheet" href="assets/css/aos.css" />
     <script src="assets/js/aos.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
@@ -70,244 +68,16 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
 
+    <link rel="stylesheet" href="src/index.css">
+
     <script
       src="https://kit.fontawesome.com/YOUR-KIT-CODE.js"
       crossorigin="anonymous"
       defer
     ></script>
 
-    <!-- Your Local Scripts -->
     <script type="module" src="src/main.js"></script>
 
-    <!-- Badge Styling -->
-    <style>
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        transition: background-color 0.3s, color 0.3s;
-        overflow-x: hidden;
-      }
-
-      .badge {
-        background-color: #e0e7ff;
-        color: #4338ca;
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 9999px;
-        font-weight: 600;
-      }
-
-      .dark {
-        background-color: #1a1a1a;
-        color: #ffffff;
-      }
-
-      .dark a {
-        color: #ffffff;
-      }
-
-      .scroll-top-btn {
-        transition: opacity 0.3s ease;
-        opacity: 0;
-        pointer-events: none;
-      }
-      .scroll-top-btn.show {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .dragging {
-        cursor: grabbing;
-        -webkit-user-select: none;
-        user-select: none;
-      }
-
-      /* Hide scrollbar for Webkit (Chrome, Safari) */
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
-
-      #projectGridWrapper {
-        -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
-      }
-
-      /* Hide scrollbar for IE, Edge, Firefox */
-      .scrollbar-hide {
-        -ms-overflow-style: none; /* IE & Edge */
-        scrollbar-width: none; /* Firefox */
-      }
-
-      #projectGridWrapper {
-        scroll-snap-type: x mandatory;
-        overflow-x: auto;
-      }
-      .project-card {
-        scroll-snap-align: start;
-      }
-
-      .btn-primary {
-        @apply text-white bg-indigo-600 px-3 py-2 rounded hover:bg-indigo-700;
-      }
-
-      .btn-secondary {
-        @apply bg-gray-200 dark:bg-gray-600 px-3 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-500;
-      }
-
-      .badge {
-        @apply inline-block bg-gray-200 dark:bg-gray-600 text-sm px-2 py-1 rounded;
-      }
-
-      /* Move pagination dots downward */
-      .swiper-pagination {
-        position: relative !important; /* Override absolute */
-        bottom: auto !important; /* Disable bottom positioning */
-        margin-top: 30px !important; /* Push down */
-        text-align: center;
-        width: 100%;
-      }
-
-      /* Change color of inactive dots */
-      .swiper-pagination-bullet {
-        background-color: #a5b4fc; /* lighter indigo */
-        opacity: 0.7;
-      }
-
-      /* Change color of active dot */
-      .swiper-pagination-bullet-active {
-        background-color: #5c6ac4; /* bright indigo */
-        opacity: 1;
-      }
-
-      /* Default filter styles */
-      .skill-filter,
-      .project-filter {
-        @apply px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium transition-all duration-300 shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500;
-      }
-
-      /* Active filters in light mode */
-      .skill-filter.active,
-      .project-filter.active {
-        @apply bg-indigo-600 text-white shadow-lg;
-      }
-
-      /* Override active filters in dark mode */
-      .dark .skill-filter.active,
-      .dark .project-filter.active {
-        @apply bg-orange-500 text-white shadow-lg;
-      }
-
-      .swiper-slide {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      /* Light mode - white background */
-      .projectSwiper .swiper-slide {
-        background-color: white;
-        color: text-gray-600; /* Ensures text remains visible */
-        @apply text-black;
-      }
-
-      /* Dark mode - dark background */
-      .dark .projectSwiper .swiper-slide {
-        color: white;
-      }
-      /* --- Fade-In Keyframes (with scale + translate) --- */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95) translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
-
-      /* --- Fade-Out Keyframes (for removing slides smoothly) --- */
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-        to {
-          opacity: 0;
-          transform: scale(0.95) translateY(20px);
-        }
-      }
-
-      /* --- Slide Base Animation State --- */
-      .swiper-slide {
-        opacity: 0;
-        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      }
-
-      /* --- Staggered Animations for Visual Depth --- */
-      .swiper-slide:nth-child(1) {
-        animation-delay: 0.05s;
-      }
-      .swiper-slide:nth-child(2) {
-        animation-delay: 0.1s;
-      }
-      .swiper-slide:nth-child(3) {
-        animation-delay: 0.15s;
-      }
-      .swiper-slide:nth-child(4) {
-        animation-delay: 0.2s;
-      }
-      .swiper-slide:nth-child(5) {
-        animation-delay: 0.25s;
-      }
-      .swiper-slide:nth-child(6) {
-        animation-delay: 0.3s;
-      }
-      .swiper-slide:nth-child(7) {
-        animation-delay: 0.35s;
-      }
-
-      /* --- Optional: Reusable Utility Classes --- */
-      .fade-in {
-        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      }
-
-      .fade-out {
-        animation: fadeOut 0.4s ease-in-out forwards;
-        pointer-events: none;
-      }
-
-      #skillsGrid > div {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-      }
-
-      #skillsGrid > div:hover {
-        transform: translateY(-6px) scale(1.03);
-        box-shadow: 0 12px 20px rgba(99, 102, 241, 0.25); /* Indigo-ish shadow */
-      }
-
-      .proficiency-bar {
-        transition: width 1.2s ease-in-out;
-      }
-
-      .proficiency-bar {
-        background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
-      }
-
-      .dark .proficiency-bar {
-        background-color: #f97316; /* Tailwind orange-500 for dark mode */
-      }
-
-      .proficiency-text {
-        color: rgba(99, 102, 241, 1); /* indigo for light mode */
-      }
-
-      .dark .proficiency-text {
-        color: #f97316; /* Tailwind orange-400 for dark mode */
-      }
-    </style>
   </head>
   <body
     class="overflow-x-hidden bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-white scroll-smooth"
@@ -332,25 +102,21 @@
           Derrick S. Wiredu
         </h1>
 
-        <!-- Hamburger Button (for mobile) -->
+        <!-- Pill-Shaped Animated Hamburger -->
         <button
           id="menu-toggle"
           aria-label="Toggle mobile menu"
-          class="md:hidden text-gray-700 dark:text-white focus:outline-none"
+          class="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-full text-gray-700 dark:text-white transition duration-300 hover:scale-105 focus:outline-none z-50"
         >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
+          <span
+            class="bar w-5 h-0.5 bg-current transform transition duration-300 origin-center"
+          ></span>
+          <span
+            class="bar w-5 h-0.5 bg-current my-1 transition duration-300"
+          ></span>
+          <span
+            class="bar w-5 h-0.5 bg-current transform transition duration-300 origin-center"
+          ></span>
         </button>
 
         <!-- Desktop Navigation -->
@@ -359,32 +125,32 @@
         >
           <a
             href="#home"
-            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 transition"
             >Home</a
           >
           <a
             href="#about-resume"
-            class="text-gray-800 dark:text-white font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 transition"
             >About</a
           >
           <a
             href="#projects"
-            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 transition"
             >Projects</a
           >
           <a
             href="#skills"
-            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 transition"
             >Skills</a
           >
           <!-- <a
             href="#resume"
-            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 transition"
             >Resume</a
           > -->
           <a
             href="#contact"
-            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            class="text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-300 transition"
             >Contact</a
           >
 
@@ -400,47 +166,40 @@
         </nav>
       </div>
 
-      <!-- Mobile Navigation Menu -->
+      <!-- Mobile Navigation Menu (Slide from Right) -->
+      <!-- Backdrop -->
+      <div
+        id="mobile-overlay"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300 md:hidden"
+      ></div>
+
       <div
         id="mobile-menu"
-        class="md:hidden hidden bg-white dark:bg-gray-800 px-6 pb-4"
+        class="fixed top-0 right-0 h-full w-64 max-w-[80%] bg-white dark:bg-gray-900 shadow-lg border-l border-gray-200 dark:border-gray-700 px-6 py-6 z-50 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden"
       >
-        <a
-          href="#home"
-          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-          >Home</a
+      <!-- Close Button -->
+        <button
+          id="mobile-menu-close"
+          aria-label="Close mobile menu"
+          class="absolute top-3 right-3 text-gray-700 dark:text-white text-4xl w-12 h-12 flex items-center justify-center focus:outline-none hover:scale-105 transition-transform duration-200"
         >
-        <a
-          href="#about"
-          class="block py-2 text-sm text-indigo-600 dark:text-white font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-          >About</a
-        >
-        <a
-          href="#projects"
-          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-          >Projects</a
-        >
-        <a
-          href="#skills"
-          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-          >Skills</a
-        >
-        <a
-          href="#resume"
-          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-          >Resume</a
-        >
-        <a
-          href="#contact"
-          class="block py-2 text-sm text-gray-800 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
-          >Contact</a
-        >
+          &times;
+        </button>
+
+        <nav class="flex flex-col gap-4 mt-20">
+          <a href="#home" class="mobile-nav-link">Home</a>
+          <a href="#about-resume" class="mobile-nav-link">About</a>
+          <a href="#projects" class="mobile-nav-link">Projects</a>
+          <a href="#skills" class="mobile-nav-link">Skills</a>
+          <a href="#resume" class="mobile-nav-link">Resume</a>
+          <a href="#contact" class="mobile-nav-link">Contact</a>
+        </nav>
+
 
         <!-- Dark Mode Toggle (Mobile) -->
         <button
           id="mobile-theme-toggle"
-          aria-label="Toggle dark mode (mobile)"
-          class="mt-2 px-2 py-1 border rounded text-sm text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center gap-2"
+          class="mt-6 w-full py-2 px-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center justify-center gap-2"
         >
           <i id="mobile-theme-icon" class="fas fa-moon"></i>
           <span id="mobile-theme-label">Dark Mode</span>
@@ -463,6 +222,7 @@
         >
           Hi, I'm
         </h1>
+
         <h2
           class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-tight"
         >
@@ -484,24 +244,34 @@
           creating modern web solutions & immersive digital experiences.
         </p>
 
+        <!-- Buttons -->
         <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+
+          <!-- View Projects Button -->
           <a
             href="#projects"
-            class="px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-500 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-xl"
+            class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-500 rounded-full font-semibold transition duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
           >
-            🚀 View Projects
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h4v4H4V6zm6 0h4v4h-4V6zm6 0h4v4h-4V6zM4 12h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z" />
+            </svg>
+            View Projects
           </a>
+
+          <!-- Download Resume Button -->
           <a
             href="resume/Derrick_Sarfo_Wiredu_Resume.pdf"
             download
-            class="px-6 py-3 border border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-200 rounded-full font-semibold transition duration-300"
+            class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-200 rounded-full font-semibold transition duration-300 text-sm sm:text-base"
           >
-            📄 Download Resume
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Download Resume
           </a>
         </div>
-      </div>
 
-      <!-- Scroll Down Button with Chevron and Pulse Animation -->
+      <!-- Scroll Down Button -->
       <div
         class="absolute bottom-4 sm:bottom-0.5 left-1/2 transform -translate-x-1/2 z-20"
       >
@@ -533,9 +303,7 @@
       id="about-resume"
       class="py-20 px-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
     >
-      <div
-        class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 relative px-4 sm:px-6 lg:px-8"
-      >
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 relative px-2 sm:px-4 lg:px-6">
         <!-- About Me (Left Side) -->
         <div data-aos="fade-right" class="md:w-1/2 space-y-6 pr-4">
           <h3
@@ -590,7 +358,7 @@
         </div>
 
         <!-- Resume (Right Side) -->
-        <div data-aos="fade-left" class="md:w-1/2 space-y-6 pl-4">
+        <div id="resume" data-aos="fade-left" class="md:w-1/2 space-y-6 pl-4">
           <h3 class="text-4xl font-bold text-indigo-600 dark:text-orange-400">
             Resume
           </h3>
@@ -864,22 +632,35 @@
         </div>
 
         <!-- Swiper Container -->
-        <div class="swiper projectSwiper">
+        <div class="swiper projectSwiper relative">
           <div class="swiper-wrapper text-gray-600" id="projectGrid">
             <!-- Slides injected dynamically -->
           </div>
 
-          <!-- Navigation Arrows -->
-          <div
-            class="swiper-button-prev text-indigo-600 dark:text-orange-400"
-          ></div>
-          <div
-            class="swiper-button-next text-indigo-600 dark:text-orange-400"
-          ></div>
+          <!-- Custom Navigation Arrows -->
+          <button
+            id="project-prev"
+            class="hidden md:flex items-center justify-center absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow hover:scale-105 hover:bg-indigo-100 dark:hover:bg-orange-100 transition"
+            aria-label="Previous"
+          >
+            <i
+              class="fas fa-chevron-left text-xl text-indigo-600 dark:text-orange-400"
+            ></i>
+          </button>
 
-          <!-- Optional Pagination -->
+          <button
+            id="project-next"
+            class="hidden md:flex items-center justify-center absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-full shadow hover:scale-105 hover:bg-indigo-100 dark:hover:bg-orange-100 transition"
+            aria-label="Next"
+          >
+            <i
+              class="fas fa-chevron-right text-xl text-indigo-600 dark:text-orange-400"
+            ></i>
+          </button>
+
+          <!-- Pagination -->
           <div
-            class="swiper-pagination !bg-transparent !text-gray-800 dark:!text-white"
+            class="swiper-pagination project-swiper-pagination mt-4 md:hidden"
           ></div>
         </div>
       </div>
@@ -914,13 +695,19 @@
           <button class="skill-filter" data-category="tools">Tools</button>
         </div>
 
-        <!-- Skills Grid -->
+        <!-- Swiper (Mobile Only) -->
+        <div class="skillsSwiper swiper block md:hidden">
+          <div id="skillsSwiperWrapper" class="swiper-wrapper"></div>
+          <div
+            class="skills-swiper-pagination swiper-pagination mt-4 md:hidden"
+          ></div>
+        </div>
+
+        <!-- Grid Layout (Tablet & Desktop Only) -->
         <div
           id="skillsGrid"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 transition-all duration-500"
-        >
-          <!-- Cards will be injected here via JS -->
-        </div>
+          class="hidden md:grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 transition-all duration-500"
+        ></div>
       </div>
     </section>
 
@@ -1227,7 +1014,7 @@
       <div
         class="mt-8 text-center text-sm text-gray-500 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700 pt-4"
       >
-        © 2025 Derrick Sarfo Wiredu. All rights reserved.
+        © 2025 wired.u Creations. All rights reserved.
       </div>
     </footer>
   </body>

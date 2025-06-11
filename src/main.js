@@ -2,23 +2,98 @@ import './index.css';
 import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 
+document.addEventListener("DOMContentLoaded", () => {
+ // === TOGGLE MOBILE NAV ===
+const menuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileOverlay = document.getElementById('mobile-overlay');
+const body = document.body;
 
-window.addEventListener('DOMContentLoaded', () => {
-  // Toggle mobile nav
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
+function toggleMobileMenu() {
+  const isOpen = mobileMenu.classList.contains('translate-x-0');
 
-  if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+  // Add delay before opening menu
+  if (!isOpen) {
+    setTimeout(() => {
+      mobileMenu.classList.remove('translate-x-full');
+      mobileMenu.classList.add('translate-x-0');
+
+      mobileOverlay?.classList.remove('hidden', 'opacity-0');
+      mobileOverlay?.classList.add('opacity-100');
+
+      body.style.overflow = 'hidden';
+      menuToggle.classList.add('open');
+    }, 150); // <-- Adjust delay here (150ms)
+  } else {
+    // Instantly close menu
+    mobileMenu.classList.add('translate-x-full');
+    mobileMenu.classList.remove('translate-x-0');
+
+    mobileOverlay?.classList.add('hidden', 'opacity-0');
+    mobileOverlay?.classList.remove('opacity-100');
+
+    body.style.overflow = '';
+    menuToggle.classList.remove('open');
   }
+}
 
-  // Dark mode toggle (desktop + mobile)
+menuToggle?.addEventListener('click', toggleMobileMenu);
+
+mobileOverlay?.addEventListener('click', () => {
+  mobileMenu.classList.add('translate-x-full');
+  mobileMenu.classList.remove('translate-x-0');
+  mobileOverlay.classList.add('hidden', 'opacity-0');
+  mobileOverlay.classList.remove('opacity-100');
+  menuToggle.classList.remove('open');
+  body.style.overflow = '';
+});
+
+document.querySelectorAll('#mobile-menu a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.add('translate-x-full');
+    mobileMenu.classList.remove('translate-x-0');
+    mobileOverlay.classList.add('hidden', 'opacity-0');
+    mobileOverlay.classList.remove('opacity-100');
+    menuToggle.classList.remove('open');
+    body.style.overflow = '';
+  });
+});
+
+const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+mobileMenuClose?.addEventListener('click', () => {
+  mobileMenu.classList.add('translate-x-full');
+  mobileMenu.classList.remove('translate-x-0');
+  mobileOverlay?.classList.add('hidden', 'opacity-0');
+  mobileOverlay?.classList.remove('opacity-100');
+  body.style.overflow = '';
+  menuToggle.classList.remove('open');
+});
+
+
+// Swipe to close (optional)
+let touchStartX = 0;
+mobileMenu?.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+});
+mobileMenu?.addEventListener('touchmove', e => {
+  const deltaX = e.touches[0].clientX - touchStartX;
+  if (deltaX < -50) {
+    mobileMenu.classList.add('translate-x-full');
+    mobileMenu.classList.remove('translate-x-0');
+    mobileOverlay.classList.add('hidden', 'opacity-0');
+    mobileOverlay.classList.remove('opacity-100');
+    menuToggle.classList.remove('open');
+    body.style.overflow = '';
+  }
+});
+
+
+  // === DARK MODE TOGGLE ===
   const root = document.documentElement;
   const themeToggle = document.getElementById('theme-toggle');
   const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-  const themeButtons = [themeToggle, mobileThemeToggle].filter(Boolean); // remove nulls
+  const themeButtons = [themeToggle, mobileThemeToggle].filter(Boolean);
 
   function applyTheme(isDark) {
     if (isDark) root.classList.add('dark');
@@ -33,82 +108,65 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Apply stored or system theme
-  const stored = localStorage.getItem('theme');
-  const isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  applyTheme(isDark);
-});
+   // Navbar Active Section Highlighting
+  const sections = document.querySelectorAll("section");
+  const navLinks = document.querySelectorAll("nav a");
 
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove("active"); // remove from all
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Initialize AOS animations
-    AOS.init({ duration: 1000 });
-
-    // Theme Toggle Setup
-    const updateThemeUI = (isDark) => {
-        const themeIcon = document.getElementById("theme-icon");
-        const themeLabel = document.getElementById("theme-label");
-        if (themeIcon && themeLabel) {
-            themeIcon.className = isDark ? "fas fa-sun" : "fas fa-moon";
-            themeLabel.textContent = isDark ? "Light Mode" : "Dark Mode";
-        }
-
-        const mobileIcon = document.getElementById("mobile-theme-icon");
-        const mobileLabel = document.getElementById("mobile-theme-label");
-        if (mobileIcon && mobileLabel) {
-            mobileIcon.className = isDark ? "fas fa-sun" : "fas fa-moon";
-            mobileLabel.textContent = isDark ? "Light Mode" : "Dark Mode";
-        }
-    };
-
-    const toggleTheme = () => {
-        const isDark = document.body.classList.toggle("dark");
-        localStorage.theme = isDark ? "dark" : "light";
-        updateThemeUI(isDark);
-    };
-
-    // Apply stored theme preference
-    const isDark = localStorage.theme === "dark";
-    document.body.classList.toggle("dark", isDark);
-    updateThemeUI(isDark);
-
-    document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
-    document.getElementById("mobile-theme-toggle")?.addEventListener("click", toggleTheme);
-
-    // Debounce Function
-    function debounce(fn, delay) {
-        let timer;
-        return function (...args) {
-            clearTimeout(timer);
-            timer = setTimeout(() => fn.apply(this, args), delay);
-        };
-    }
-
-    // Google Analytics Tracking
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-    gtag("config", "G-XXXXXXXXXX");
-
-    // Typing Animation
-    new Typed("#typed-text", {
-        strings: [
-            "Computer Science &amp; Engineering Major",
-            "Frontend Developer",
-            "UI/UX Designer",
-            "Backend Engineer",
-            "Freelance Publisher",
-        ],
-        typeSpeed: 50,
-        backSpeed: 30,
-        backDelay: 2000,
-        loop: true,
+          if (link.getAttribute("href").substring(1) === entry.target.id) {
+            link.classList.add("active"); // apply to current
+          }
+        });
+      }
     });
-});
+  }, { threshold: 0.5 });
 
-document.addEventListener("DOMContentLoaded", () => {
+  sections.forEach(section => sectionObserver.observe(section));
+
+
+  const stored = localStorage.getItem('theme');
+  const isDarkTheme = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  applyTheme(isDarkTheme);
+
+  // === AOS ANIMATION ===
+  AOS.init({ duration: 1000 });
+
+  const updateThemeUI = (isDark) => {
+    const themeIcon = document.getElementById("theme-icon");
+    const themeLabel = document.getElementById("theme-label");
+    const mobileIcon = document.getElementById("mobile-theme-icon");
+    const mobileLabel = document.getElementById("mobile-theme-label");
+
+    if (themeIcon && themeLabel) {
+      themeIcon.className = isDark ? "fas fa-sun" : "fas fa-moon";
+      themeLabel.textContent = isDark ? "Light Mode" : "Dark Mode";
+    }
+
+    if (mobileIcon && mobileLabel) {
+      mobileIcon.className = isDark ? "fas fa-sun" : "fas fa-moon";
+      mobileLabel.textContent = isDark ? "Light Mode" : "Dark Mode";
+    }
+  };
+
+  const toggleTheme = () => {
+    const isDark = document.body.classList.toggle("dark");
+    localStorage.theme = isDark ? "dark" : "light";
+    updateThemeUI(isDark);
+  };
+
+  document.body.classList.toggle("dark", localStorage.theme === "dark");
+  updateThemeUI(localStorage.theme === "dark");
+
+  document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
+  document.getElementById("mobile-theme-toggle")?.addEventListener("click", toggleTheme);
+
+
+     // FILTER BUTTONS
     const buttons = document.querySelectorAll(".filter-btn");
     const cards = document.querySelectorAll(".project-card");
 
@@ -124,14 +182,13 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+    // PROJECTS SECTION 
     const projects = [
         {
                   title: "E-commerce UI",
                   category: "design",
-                  image: "assets/images/craft.jpg",
+                  image: "src/images/craft.jpg",
                   description:
                     "A visually engaging and user-centric UI/UX design concept tailored for an eCommerce platform specializing in handcrafted wooden furniture. The interface showcases a rich catalog of custom-made chairs, tables, wardrobes, and other crafts. Emphasis was placed on elegant product displays, seamless category navigation, real-time filtering, and a responsive layout to ensure a smooth shopping experience across devices. The design supports customer trust-building through aesthetic consistency, detailed product views, and a streamlined checkout process.",
                   tech: ["Figma"],
@@ -141,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                   title: "Hotel Management System",
                   category: "web",
-                  image: "assets/images/GT dashboard.png",
+                  image: "src/images/GT dashboard.png",
                   description:
                     "A full-stack hotel management system designed to simplify operations for administrators, managers, employees, and customers. The system includes role-based dashboards with tailored functionalities: bookings, room management, employee scheduling, user authentication, and automated billing. Built using PHP and SQL for robust backend operations, with a responsive frontend using HTML and CSS. This solution offers a practical interface for real-time hotel resource tracking and service optimization, ensuring a streamlined hospitality experience for all user roles.",
                   tech: ["HTML", "CSS", "PHP", "SQL"],
@@ -151,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                   title: "Disney+ UI/UX",
                   category: "design",
-                  image: "assets/images/disney.png",
+                  image: "src/images/disney.png",
                   description:
                     "A playful and modern redesign concept for Disney+, crafted to enhance the user journey across devices. It features intuitive navigation, bold typography, and immersive visuals with a magical theme. This version improves content discovery with personalized rows, animation-enhanced UI, and kid-friendly layouts. Parental controls and accessibility are built-in. The interface was designed with families in mind—focusing on both functionality and joy, ensuring users (both young and aged) stay engaged in the streaming experience.",
                   tech: ["Figma"],
@@ -161,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                   title: "Tailor App",
                   category: "mobile",
-                  image: "assets/images/tailor.jpg",
+                  image: "src/images/tailor.jpg",
                   description:
                     "A specialized mobile app for fashion designers and tailors to efficiently manage clients, fabrics, and custom orders. The app allows users to store accurate measurements, attach fabric images, assign deadlines, and monitor balances. Built with Flutter and Firebase, it supports real-time updates, push notifications, and secure cloud data handling. Designed to prevent fabric mix-ups and improve workflow, the platform enhances productivity and customer satisfaction with its sleek, intuitive interface. An upcoming update will include visual dress previews.",
                   tech: ["Flutter", "Firebase"],
@@ -171,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                   title: "Healthcare DBMS",
                   category: "web",
-                  image: "assets/images/phpMyAdmin.png",
+                  image: "src/images/phpMyAdmin.png",
                   description:
                     "A secure, SQL-powered healthcare database system for organizing patient records, prescriptions, and clinical tasks. Featuring multi-role access levels, the platform differentiates doctors, pharmacists, and admins. It supports analytical queries, medication history tracking, and prescription management. The interface enables real-time data retrieval and updates to reduce errors. By centralizing healthcare operations, this system improves efficiency, accountability, and the overall patient care experience. Future upgrades may include mobile doctor access.",
                   tech: ["SQL"],
@@ -181,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                   title: "Smart Villa VR Experience",
                   category: "3D graphics",
-                  image: "assets/images/smart-villa.png",
+                  image: "src/images/smart-villa.png",
                   description:
                     "An immersive virtual reality smart villa built using A-Frame. This interactive 3D experience allows users to explore a digital villa environment with realistic lighting, ambient sound, animated water effects, and detailed models of furniture and appliances. It supports both desktop and VR headset navigation, offering features like grab-and-pan camera control, light/dark mode toggle, and day/night transitions. Designed for architectural visualization, this project demonstrates modern web-based VR techniques, spatial UI interaction, and mobile responsiveness.",
                   tech: ["A-Frame", "HTML", "three.js"],
@@ -191,139 +248,130 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                   title: "Graphics Design Showcase",
                   category: "design",
-                  image: "assets/images/showcase.png",
+                  image: "src/images/showcase.png",
                   description:
                     "A portfolio of branding and logo design projects made for businesses in tech, fashion, food, and education. This collection showcases clean, minimalist styles emphasizing geometry, symbolism, and typography. Every logo reflects the brand’s voice while remaining versatile across digital and print formats. Designed in Adobe Illustrator and Figma, these pieces are optimized for scalability and visual consistency. The showcase captures the evolution of concepts from sketches to polished, production-ready designs.",
                   tech: ["Photoshop", "Illustrator", "Figma"],
                   github: "#",
                   demo: "https://dribbble.com/yourprofile",
                 },
-    ]; // Keep your projects array unchanged here
+    ]; // more projects array here
+    
     let swiper;
+  function renderProjects(category = "all") {
+    const grid = document.getElementById("projectGrid");
+    grid.innerHTML = "";
 
-    function renderProjects(category = "all") {
-        const grid = document.getElementById("projectGrid");
-        grid.innerHTML = "";
+    const filtered = category === "all" ? projects : projects.filter(p => p.category === category);
 
-        const filtered = category === "all" ? projects : projects.filter(p => p.category === category);
-
-        const slideHTML = filtered.map(project => `
-            <div class="swiper-slide bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 group flex flex-col">
-                <div class="relative overflow-hidden">
-                    <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div class="p-5 flex flex-col flex-1">
-                    <div class="flex justify-between items-start mb-3">
-                        <i class="fas fa-folder-open text-orange-400 text-xl"></i>
-                        <div class="flex gap-3 text-gray-400 text-lg">
-                            ${project.github !== "#" ? `<a href="${project.github}" target="_blank"><i class="fas fa-code-branch"></i></a>` : ""}
-                            ${project.demo !== "#" ? `<a href="${project.demo}" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ""}
-                        </div>
-                    </div>
-                    <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400">${project.title}</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">${project.description}</p>
-                    <div class="mt-auto flex flex-wrap gap-2">
-                        ${project.tech.map(t => `<span class="bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-white text-xs px-2 py-1 rounded-full font-medium">${t}</span>`).join("")}
-                    </div>
-                </div>
+    const slideHTML = filtered.map(project => `
+      <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col">
+        <div class="relative overflow-hidden">
+          <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-start mb-3">
+            <i class="fas fa-folder-open text-orange-400 text-xl"></i>
+            <div class="flex gap-3 text-gray-400 text-lg">
+              ${project.github !== "#" ? `<a href="${project.github}" target="_blank"><i class="fas fa-code-branch"></i></a>` : ""}
+              ${project.demo !== "#" ? `<a href="${project.demo}" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ""}
             </div>
-        `).join("");
+          </div>
+          <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400">${project.title}</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">${project.description}</p>
+          <div class="mt-auto flex flex-wrap gap-2">
+            ${project.tech.map(t => `<span class="bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-white text-xs px-2 py-1 rounded-full font-medium">${t}</span>`).join("")}
+          </div>
+        </div>
+      </div>
+    `).join("");
 
-        grid.innerHTML = slideHTML;
+    grid.innerHTML = slideHTML;
 
-        if (swiper) swiper.destroy(true, true);
+    if (swiper) swiper.destroy(true, true);
 
-        swiper = new Swiper(".projectSwiper", {
-            slidesPerView: 1,
-            spaceBetween: 24,
-            loop: false,
-            observer: true,
-            observeParents: true,
-            observeSlideChildren: true,
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            breakpoints: {
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-            },
-        });
+    swiper = new Swiper(".projectSwiper", {
+    slidesPerView: 3,
+    spaceBetween: 30,
+    centeredSlides: true,
+    loop: true,
+    grabCursor: true,
+    pagination: {
+      el: ".project-swiper-pagination",
+      clickable: true,
+    },
+    navigation: {
+      nextEl: document.getElementById("project-next"),
+      prevEl: document.getElementById("project-prev"),
+    },
+    breakpoints: {
+      0: {
+        slidesPerView: 1,
+        centeredSlides: false,
+      },
+      768: {
+        slidesPerView: 2,
+        centeredSlides: false,
+      },
+      1024: {
+        slidesPerView: 3,
+        centeredSlides: true,
+      },
+    },
+  });
 
-        setTimeout(() => {
-        AOS.refresh();
-    }, 500);
-}
+    setTimeout(() => AOS.refresh(), 500);
+  }
 
-    renderProjects(); // Initial load
+  renderProjects(); // ✅ Call after defining
 
-    document.getElementById("projectGrid")?.addEventListener("click", (e) => {
-        const clickedSlide = e.target.closest(".swiper-slide");
-        if (!clickedSlide) return;
-
-        const title = clickedSlide.querySelector("h4")?.innerText;
-        const project = projects.find(p => p.title === title);
-
-        if (project) {
-            openModal(project);
-        }
+  document.querySelectorAll(".project-filter").forEach(button => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".project-filter").forEach(b => b.classList.remove("active", "bg-orange-500", "text-white"));
+      button.classList.add("active", "bg-orange-500", "text-white");
+      renderProjects(button.dataset.category);
     });
+  });
 
-    document.querySelectorAll(".project-filter").forEach(button => {
-        button.addEventListener("click", () => {
-            document.querySelectorAll(".project-filter").forEach(b => b.classList.remove("active", "bg-orange-500", "text-white"));
-            button.classList.add("active", "bg-orange-500", "text-white");
-            renderProjects(button.dataset.category);
-        });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    const wrapper = document.getElementById("projectGridWrapper");
-    if (!wrapper) return; // Prevent errors if the element doesn't exist
-
-    let isDragging = false;
-    let startX;
-    let scrollLeft;
+  // === PROJECT DRAG SCROLL ===
+  const wrapper = document.getElementById("projectGridWrapper");
+  if (wrapper) {
+    let isDragging = false, startX, scrollLeft;
 
     const startDrag = (x) => {
-        isDragging = true;
-        startX = x - wrapper.offsetLeft;
-        scrollLeft = wrapper.scrollLeft;
+      isDragging = true;
+      startX = x - wrapper.offsetLeft;
+      scrollLeft = wrapper.scrollLeft;
     };
 
     const stopDrag = () => {
-        isDragging = false;
-        wrapper.classList.remove("dragging");
+      isDragging = false;
+      wrapper.classList.remove("dragging");
     };
 
     const moveDrag = (x) => {
-        if (!isDragging) return;
-        const walk = (x - startX) * 1.5; 
-        wrapper.scrollLeft = scrollLeft - walk;
+      if (!isDragging) return;
+      const walk = (x - startX) * 1.5;
+      wrapper.scrollLeft = scrollLeft - walk;
     };
 
     wrapper.addEventListener("mousedown", (e) => {
-        wrapper.classList.add("dragging");
-        startDrag(e.pageX);
+      wrapper.classList.add("dragging");
+      startDrag(e.pageX);
     });
 
     wrapper.addEventListener("mouseleave", stopDrag);
     wrapper.addEventListener("mouseup", stopDrag);
     wrapper.addEventListener("mousemove", (e) => moveDrag(e.pageX));
-
     wrapper.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX));
     wrapper.addEventListener("touchend", stopDrag);
     wrapper.addEventListener("touchmove", (e) => moveDrag(e.touches[0].pageX));
-});
+  }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const skillsGrid = document.getElementById("skillsGrid");
+  // === SKILLS SECTION ===
+  const skillsGrid = document.getElementById("skillsGrid");
+  const swiperWrapper = document.getElementById("skillsSwiperWrapper");
+
     const skillsData = [
         {
           name: "HTML",
@@ -458,117 +506,212 @@ document.addEventListener("DOMContentLoaded", () => {
           projects: 0,
           proficiency: 95,
         },
-    ]; // Keep your skillsData array unchanged here
+    ]; // skillsData array here
 
-    function renderSkills(category = "all") {
-        skillsGrid.innerHTML = "";
+    let skillsSwiperInstance;
 
-        const filteredSkills = category === "all" ? skillsData : skillsData.filter(skill => skill.category === category);
+function createSkillCard(skill) {
+  const skillCard = document.createElement("div");
+  skillCard.className =
+    "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
 
-        filteredSkills.forEach(skill => {
-            const skillCard = document.createElement("div");
-            skillCard.className = "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out will-change-transform";
+    skillCard.style.flex = "1 1 calc(50% - 0.5rem)"; // 50% width minus gap
+    skillCard.style.display = "flex";
+    skillCard.style.flexDirection = "column";
 
-            skillCard.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-                    <h3 class="text-xl font-semibold">${skill.name}</h3>
-                </div>
-                <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
-                <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
-                    <div class="proficiency-bar h-2 rounded" style="width: 0%" data-percentage="${skill.proficiency}"></div>
-                </div>
-                <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
-                    <span><strong>${skill.years}</strong> years</span>
-                    <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
-                    <span class="proficiency-count">
-                        <strong class="proficiency-text text-indigo-600 transition-transform-opacity" data-count="${skill.proficiency}">0%</strong> proficiency
-                    </span>
-                </div>
-            `;
+    // Conditional layout for "Mavis Beacon Teaches Typing"
+  let nameSection = "";
 
-            skillsGrid.appendChild(skillCard);
+  if (skill.name === "Mavis Beacon Teaches Typing") {
+    nameSection = `
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+          <span class="text-sm font-medium">Mavis Beacon</span>
+        </div>
+        <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
+      </div>
+    `;
+  } else {
+    nameSection = `
+      <div class="flex items-center gap-3">
+        <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+        <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
+      </div>
+    `;
+  }
 
-            setTimeout(() => {
-                const loaderBar = skillCard.querySelector(".proficiency-bar");
-                loaderBar.style.width = loaderBar.getAttribute("data-percentage") + "%";
-            }, 100);
-        });
+  skillCard.innerHTML = `
+    <div class="flex items-center gap-3">
+      <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+      <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
+    </div>
+    <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
+    <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
+      <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
+    </div>
+    <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
+      <span><strong>${skill.years}</strong> years</span>
+      <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
+      <span class="proficiency-count">
+        <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
+      </span>
+    </div>
+  `;
 
-        triggerAnimations();
-        animateOnScroll();
+  return skillCard;
+}
+
+function renderSkills(category = "all") {
+  const filtered = category === "all" ? skillsData : skillsData.filter(skill => skill.category === category);
+
+  const skillsGrid = document.getElementById("skillsGrid");
+  const swiperWrapper = document.getElementById("skillsSwiperWrapper");
+  const swiperContainer = document.querySelector(".skillsSwiper");
+  const pagination = document.querySelector(".skills-swiper-pagination");
+
+  const isMobile = window.innerWidth < 768;
+
+  // Reset both containers
+  skillsGrid.innerHTML = "";
+  swiperWrapper.innerHTML = "";
+
+  if (isMobile) {
+    // 🔄 Switching to mobile view
+
+    // Show mobile swiper, hide desktop grid
+    skillsGrid.classList.add("hidden");
+    swiperContainer?.classList.remove("hidden");
+    pagination?.classList.remove("hidden", "md:block");
+
+    // Build Swiper slides (2x2 = 4 skills per slide)
+    for (let i = 0; i < filtered.length; i += 4) {
+      const slide = document.createElement("div");
+      slide.className = "swiper-slide flex flex-wrap gap-4 px-2 pb-6";
+      filtered.slice(i, i + 4).forEach(skill => {
+        slide.appendChild(createSkillCard(skill));
+      });
+      swiperWrapper.appendChild(slide);
     }
 
-    function triggerAnimations() {
-        document.querySelectorAll("#skillsGrid > div").forEach(card => {
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.remove("opacity-0", "translate-y-10");
-                        entry.target.classList.add("opacity-100", "translate-y-0");
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.2 });
-
-            observer.observe(card);
-        });
-    }
-
-    function animateOnScroll() {
-        document.querySelectorAll(".proficiency-count strong").forEach(el => {
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        let count = 0;
-                        const target = parseInt(entry.target.dataset.count, 10);
-                        const interval = setInterval(() => {
-                            if (count < target) {
-                                count++;
-                                entry.target.textContent = count + "%";
-                            } else {
-                                clearInterval(interval);
-                            }
-                        }, 15);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            observer.observe(el);
-        });
-    }
-
-    renderSkills(); // Ensure the initial render executes properly
-
-    document.querySelectorAll(".skill-filter").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".skill-filter").forEach(b => b.classList.remove("active", "bg-indigo-600", "text-white"));
-            btn.classList.add("active", "bg-indigo-600", "text-white");
-            renderSkills(btn.getAttribute("data-category"));
-        });
+    // Re-initialize Swiper
+    if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+    skillsSwiperInstance = new Swiper(".skillsSwiper", {
+      slidesPerView: 1,
+      spaceBetween: 24,
+       autoHeight: true,
+      pagination: {
+        el: ".skills-swiper-pagination",
+        clickable: true,
+      },
     });
+
+  } else {
+    // 🔄 Switching to desktop view
+
+    // Hide swiper, show grid
+    swiperContainer?.classList.add("hidden");
+    pagination?.classList.add("hidden", "md:hidden");
+    skillsGrid.classList.remove("hidden");
+
+    // Cleanup leftover Swiper state
+    if (skillsSwiperInstance) {
+      skillsSwiperInstance.destroy(true, true);
+      skillsSwiperInstance = null;
+      swiperContainer?.classList.remove("swiper-initialized", "swiper-backface-hidden");
+      pagination.innerHTML = "";
+    }
+
+    // Render grid layout
+    filtered.forEach(skill => {
+      skillsGrid.appendChild(createSkillCard(skill));
+    });
+  }
+
+  // Animate everything
+  setTimeout(() => {
+    triggerAnimations();
+    animateOnScroll();
+  }, 100);
+}
+
+// Listen to screen resizing
+window.addEventListener("resize", () => {
+  const activeCategory = document.querySelector(".skill-filter.active")?.getAttribute("data-category") || "all";
+  renderSkills(activeCategory);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Navbar Active Section Highlighting
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll("nav a");
 
-    const observer = new IntersectionObserver(entries => {
+  function initSkillsSwiper() {
+    if (window.innerWidth < 768) {
+      if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+      skillsSwiperInstance = new Swiper(".skillsSwiper", {
+        slidesPerView: 1,
+        spaceBetween: 24,
+        pagination: {
+          el: ".skills-swiper-pagination",
+          clickable: true,
+        },
+      });
+    }
+  }
+
+  function triggerAnimations() {
+    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                navLinks.forEach(link => {
-                    link.classList.remove("text-indigo-600", "font-bold");
-                    if (link.getAttribute("href").substring(1) === entry.target.id) {
-                        link.classList.add("text-indigo-600", "font-bold");
-                    }
-                });
-            }
-        });
-    }, { threshold: 0.5 });
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+            entry.target.classList.add("opacity-100", "translate-y-0");
 
-    sections.forEach(section => observer.observe(section));
+            // loader bar
+            const loaderBar = entry.target.querySelector(".proficiency-bar");
+            if (loaderBar) {
+              loaderBar.style.width = loaderBar.getAttribute("data-percentage") + "%";
+            }
+
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(card);
+    });
+  }
+
+  function animateOnScroll() {
+    document.querySelectorAll(".proficiency-count strong").forEach(el => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            let count = 0;
+            const target = parseInt(entry.target.dataset.count, 10);
+            const interval = setInterval(() => {
+              if (count < target) {
+                count++;
+                entry.target.textContent = count + "%";
+              } else {
+                clearInterval(interval);
+              }
+            }, 15);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      observer.observe(el);
+    });
+  }
+
+  renderSkills(); // ✅ Initial call
+
+  document.querySelectorAll(".skill-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".skill-filter").forEach(b =>
+        b.classList.remove("active", "bg-indigo-600", "text-white")
+      );
+      btn.classList.add("active", "bg-indigo-600", "text-white");
+      renderSkills(btn.getAttribute("data-category"));
+    });
+  });
 
     // Scroll to Top Button
     const scrollBtn = document.getElementById("scrollToTopBtn");
@@ -581,7 +724,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    scrollBtn.addEventListener("click", () => {
+    scrollBtn?.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
@@ -591,7 +734,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const successMsg = document.getElementById("success-message");
     const errorMsg = document.getElementById("error-message");
 
-    form.addEventListener("submit", async (event) => {
+    form?.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
 
@@ -686,7 +829,36 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.add("bg-indigo-500", "dark:bg-orange-500", "text-white");
         });
     });
+
+    // Debounce Function
+    function debounce(fn, delay) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    // Google Analytics Tracking
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-XXXXXXXXXX");
+
+    // Typing Animation
+    new Typed("#typed-text", {
+        strings: [
+            "Computer Science &amp; Engineering Major",
+            "Frontend Developer",
+            "UI/UX Designer",
+            "Backend Engineer",
+            "Freelance Publisher",
+        ],
+        typeSpeed: 50,
+        backSpeed: 30,
+        backDelay: 2000,
+        loop: true,
+    });
 });
-
-
-
