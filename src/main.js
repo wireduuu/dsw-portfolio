@@ -188,7 +188,7 @@ mobileMenu?.addEventListener('touchmove', e => {
         {
                   title: "E-commerce UI",
                   category: "design",
-                  image: "src/images/craft.jpg",
+                  image: "/images/craft.jpg",
                   description:
                     "A visually engaging and user-centric UI/UX design concept tailored for an eCommerce platform specializing in handcrafted wooden furniture. The interface showcases a rich catalog of custom-made chairs, tables, wardrobes, and other crafts. Emphasis was placed on elegant product displays, seamless category navigation, real-time filtering, and a responsive layout to ensure a smooth shopping experience across devices. The design supports customer trust-building through aesthetic consistency, detailed product views, and a streamlined checkout process.",
                   tech: ["Figma"],
@@ -198,7 +198,7 @@ mobileMenu?.addEventListener('touchmove', e => {
                 {
                   title: "Hotel Management System",
                   category: "web",
-                  image: "src/images/GT dashboard.png",
+                  image: "/images/GT dashboard.png",
                   description:
                     "A full-stack hotel management system designed to simplify operations for administrators, managers, employees, and customers. The system includes role-based dashboards with tailored functionalities: bookings, room management, employee scheduling, user authentication, and automated billing. Built using PHP and SQL for robust backend operations, with a responsive frontend using HTML and CSS. This solution offers a practical interface for real-time hotel resource tracking and service optimization, ensuring a streamlined hospitality experience for all user roles.",
                   tech: ["HTML", "CSS", "PHP", "SQL"],
@@ -208,7 +208,7 @@ mobileMenu?.addEventListener('touchmove', e => {
                 {
                   title: "Disney+ UI/UX",
                   category: "design",
-                  image: "src/images/disney.png",
+                  image: "/images/disney.png",
                   description:
                     "A playful and modern redesign concept for Disney+, crafted to enhance the user journey across devices. It features intuitive navigation, bold typography, and immersive visuals with a magical theme. This version improves content discovery with personalized rows, animation-enhanced UI, and kid-friendly layouts. Parental controls and accessibility are built-in. The interface was designed with families in mind—focusing on both functionality and joy, ensuring users (both young and aged) stay engaged in the streaming experience.",
                   tech: ["Figma"],
@@ -218,7 +218,7 @@ mobileMenu?.addEventListener('touchmove', e => {
                 {
                   title: "Tailor App",
                   category: "mobile",
-                  image: "src/images/tailor.jpg",
+                  image: "/images/tailor.jpg",
                   description:
                     "A specialized mobile app for fashion designers and tailors to efficiently manage clients, fabrics, and custom orders. The app allows users to store accurate measurements, attach fabric images, assign deadlines, and monitor balances. Built with Flutter and Firebase, it supports real-time updates, push notifications, and secure cloud data handling. Designed to prevent fabric mix-ups and improve workflow, the platform enhances productivity and customer satisfaction with its sleek, intuitive interface. An upcoming update will include visual dress previews.",
                   tech: ["Flutter", "Firebase"],
@@ -228,7 +228,7 @@ mobileMenu?.addEventListener('touchmove', e => {
                 {
                   title: "Healthcare DBMS",
                   category: "web",
-                  image: "src/images/phpMyAdmin.png",
+                  image: "/images/phpMyAdmin.png",
                   description:
                     "A secure, SQL-powered healthcare database system for organizing patient records, prescriptions, and clinical tasks. Featuring multi-role access levels, the platform differentiates doctors, pharmacists, and admins. It supports analytical queries, medication history tracking, and prescription management. The interface enables real-time data retrieval and updates to reduce errors. By centralizing healthcare operations, this system improves efficiency, accountability, and the overall patient care experience. Future upgrades may include mobile doctor access.",
                   tech: ["SQL"],
@@ -238,7 +238,7 @@ mobileMenu?.addEventListener('touchmove', e => {
                 {
                   title: "Smart Villa VR Experience",
                   category: "3D graphics",
-                  image: "src/images/smart-villa.png",
+                  image: "/images/smart-villa.png",
                   description:
                     "An immersive virtual reality smart villa built using A-Frame. This interactive 3D experience allows users to explore a digital villa environment with realistic lighting, ambient sound, animated water effects, and detailed models of furniture and appliances. It supports both desktop and VR headset navigation, offering features like grab-and-pan camera control, light/dark mode toggle, and day/night transitions. Designed for architectural visualization, this project demonstrates modern web-based VR techniques, spatial UI interaction, and mobile responsiveness.",
                   tech: ["A-Frame", "HTML", "three.js"],
@@ -248,7 +248,7 @@ mobileMenu?.addEventListener('touchmove', e => {
                 {
                   title: "Graphics Design Showcase",
                   category: "design",
-                  image: "src/images/showcase.png",
+                  image: "/images/showcase.png",
                   description:
                     "A portfolio of branding and logo design projects made for businesses in tech, fashion, food, and education. This collection showcases clean, minimalist styles emphasizing geometry, symbolism, and typography. Every logo reflects the brand’s voice while remaining versatile across digital and print formats. Designed in Adobe Illustrator and Figma, these pieces are optimized for scalability and visual consistency. The showcase captures the evolution of concepts from sketches to polished, production-ready designs.",
                   tech: ["Photoshop", "Illustrator", "Figma"],
@@ -563,7 +563,9 @@ function createSkillCard(skill) {
 }
 
 function renderSkills(category = "all") {
-  const filtered = category === "all" ? skillsData : skillsData.filter(skill => skill.category === category);
+  const filtered = category === "all"
+    ? skillsData
+    : skillsData.filter(skill => skill.category === category);
 
   const skillsGrid = document.getElementById("skillsGrid");
   const swiperWrapper = document.getElementById("skillsSwiperWrapper");
@@ -572,34 +574,32 @@ function renderSkills(category = "all") {
 
   const isMobile = window.innerWidth < 768;
 
-  // Reset both containers
+  // Reset containers
   skillsGrid.innerHTML = "";
   swiperWrapper.innerHTML = "";
 
   if (isMobile) {
-    // 🔄 Switching to mobile view
-
-    // Show mobile swiper, hide desktop grid
+    // ✅ Mobile View: Show swiper
     skillsGrid.classList.add("hidden");
     swiperContainer?.classList.remove("hidden");
-    pagination?.classList.remove("hidden", "md:block");
+    pagination?.classList.remove("hidden");
 
-    // Build Swiper slides (2x2 = 4 skills per slide)
+    // Build Swiper slides (2x2 layout: 4 per slide)
     for (let i = 0; i < filtered.length; i += 4) {
       const slide = document.createElement("div");
-      slide.className = "swiper-slide flex flex-wrap gap-4 px-2 pb-6";
+      slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
       filtered.slice(i, i + 4).forEach(skill => {
         slide.appendChild(createSkillCard(skill));
       });
       swiperWrapper.appendChild(slide);
     }
 
-    // Re-initialize Swiper
+    // Initialize Swiper
     if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
     skillsSwiperInstance = new Swiper(".skillsSwiper", {
       slidesPerView: 1,
       spaceBetween: 24,
-       autoHeight: true,
+      autoHeight: true,
       pagination: {
         el: ".skills-swiper-pagination",
         clickable: true,
@@ -607,14 +607,12 @@ function renderSkills(category = "all") {
     });
 
   } else {
-    // 🔄 Switching to desktop view
-
-    // Hide swiper, show grid
+    // ✅ Desktop View: Show grid
     swiperContainer?.classList.add("hidden");
-    pagination?.classList.add("hidden", "md:hidden");
+    pagination?.classList.add("hidden");
     skillsGrid.classList.remove("hidden");
 
-    // Cleanup leftover Swiper state
+    // Destroy Swiper and clean state
     if (skillsSwiperInstance) {
       skillsSwiperInstance.destroy(true, true);
       skillsSwiperInstance = null;
@@ -622,41 +620,30 @@ function renderSkills(category = "all") {
       pagination.innerHTML = "";
     }
 
-    // Render grid layout
+    // Render cards in grid
     filtered.forEach(skill => {
       skillsGrid.appendChild(createSkillCard(skill));
     });
   }
 
-  // Animate everything
-  setTimeout(() => {
-    triggerAnimations();
-    animateOnScroll();
-  }, 100);
+  // ✅ Trigger animations once
+  requestAnimationFrame(() => {
+    triggerAnimationsOnce();
+    animateOnScrollOnce();
+  });
 }
 
-// Listen to screen resizing
+let resizeTimer;
 window.addEventListener("resize", () => {
-  const activeCategory = document.querySelector(".skill-filter.active")?.getAttribute("data-category") || "all";
-  renderSkills(activeCategory);
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const activeCategory = document.querySelector(".skill-filter.active")?.dataset.category || "all";
+    renderSkills(activeCategory);
+  }, 300);
 });
 
 
-  function initSkillsSwiper() {
-    if (window.innerWidth < 768) {
-      if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
-      skillsSwiperInstance = new Swiper(".skillsSwiper", {
-        slidesPerView: 1,
-        spaceBetween: 24,
-        pagination: {
-          el: ".skills-swiper-pagination",
-          clickable: true,
-        },
-      });
-    }
-  }
-
-  function triggerAnimations() {
+  function triggerAnimationsOnce() {
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
@@ -664,42 +651,43 @@ window.addEventListener("resize", () => {
             entry.target.classList.remove("opacity-0", "translate-y-10");
             entry.target.classList.add("opacity-100", "translate-y-0");
 
-            // loader bar
-            const loaderBar = entry.target.querySelector(".proficiency-bar");
-            if (loaderBar) {
-              loaderBar.style.width = loaderBar.getAttribute("data-percentage") + "%";
+            const bar = entry.target.querySelector(".proficiency-bar");
+            if (bar) {
+              bar.style.width = bar.getAttribute("data-percentage") + "%";
             }
 
-            observer.unobserve(entry.target);
+            observer.unobserve(entry.target); // ✅ Avoid retriggers
           }
         });
       }, { threshold: 0.2 });
+
       observer.observe(card);
     });
   }
 
-  function animateOnScroll() {
-    document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            let count = 0;
-            const target = parseInt(entry.target.dataset.count, 10);
-            const interval = setInterval(() => {
-              if (count < target) {
-                count++;
-                entry.target.textContent = count + "%";
-              } else {
-                clearInterval(interval);
-              }
-            }, 15);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.5 });
-      observer.observe(el);
-    });
-  }
+    function animateOnScrollOnce() {
+      document.querySelectorAll(".proficiency-count strong").forEach(el => {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              let count = 0;
+              const target = parseInt(entry.target.dataset.count, 10);
+              const interval = setInterval(() => {
+                if (count < target) {
+                  count++;
+                  entry.target.textContent = count + "%";
+                } else {
+                  clearInterval(interval);
+                }
+              }, 15);
+              observer.unobserve(entry.target); // ✅ Important
+            }
+          });
+        }, { threshold: 0.5 });
+
+        observer.observe(el);
+      });
+    }
 
   renderSkills(); // ✅ Initial call
 
@@ -789,46 +777,72 @@ window.addEventListener("resize", () => {
         if (e.target === modal) modal.classList.add("hidden");
     });
 
-    // Resume Filtering Logic
     const resumeFilterBtns = document.querySelectorAll(".resume-filter-btn");
-    const resumeCardEls = document.querySelectorAll(".resume-card");
-    const defaultFilter = "major";
+const resumeCardEls = document.querySelectorAll(".resume-card");
+const defaultFilter = "major";
 
-    // Set initial visibility
+// Set initial card visibility on load
+resumeCardEls.forEach(card => {
+  const isVisible = card.getAttribute("data-category") === defaultFilter;
+  card.classList.toggle("hidden", !isVisible);
+});
+
+// Set initial active button state
+resumeFilterBtns.forEach(btn => {
+  const isActive = btn.getAttribute("data-filter") === defaultFilter;
+  btn.classList.toggle("bg-indigo-500", isActive);
+  btn.classList.toggle("dark:bg-orange-500", isActive);
+  btn.classList.toggle("text-white", isActive);
+  btn.classList.toggle("bg-gray-200", !isActive);
+  btn.classList.toggle("dark:bg-gray-800", !isActive);
+  btn.classList.toggle("text-gray-700", !isActive);
+  btn.classList.toggle("dark:text-gray-300", !isActive);
+});
+
+// Add click interaction
+resumeFilterBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const selectedCategory = btn.getAttribute("data-filter");
+
+    // 👉 Immediately update active styling
+    resumeFilterBtns.forEach(b => {
+      b.classList.remove(
+        "bg-indigo-500",
+        "dark:bg-orange-500",
+        "text-white",
+        "border",
+        "border-gray-300",
+        "dark:border-gray-700"
+      );
+      b.classList.add(
+        "bg-gray-200",
+        "dark:bg-gray-800",
+        "text-gray-700",
+        "dark:text-gray-300",
+        "transition-colors",
+        "duration-150"
+      );
+    });
+
+    btn.classList.remove(
+      "bg-gray-200",
+      "dark:bg-gray-800",
+      "text-gray-700",
+      "dark:text-gray-300"
+    );
+    btn.classList.add(
+      "bg-indigo-500",
+      "dark:bg-orange-500",
+      "text-white"
+    );
+
+    // 🔄 Filter the cards
     resumeCardEls.forEach(card => {
-        card.classList.toggle("hidden", card.getAttribute("data-category") !== defaultFilter);
+      const matches = card.getAttribute("data-category") === selectedCategory;
+      card.classList.toggle("hidden", !matches);
     });
-
-    // Apply default filter styling
-    resumeFilterBtns.forEach(btn => {
-        const isActive = btn.getAttribute("data-filter") === defaultFilter;
-        btn.classList.toggle("bg-indigo-500", isActive);
-        btn.classList.toggle("dark:bg-orange-500", isActive);
-        btn.classList.toggle("text-white", isActive);
-        btn.classList.toggle("bg-gray-200", !isActive);
-        btn.classList.toggle("dark:bg-gray-800", !isActive);
-        btn.classList.toggle("text-gray-700", !isActive);
-        btn.classList.toggle("dark:text-gray-300", !isActive);
-    });
-
-    // Add filtering interaction
-    resumeFilterBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const selectedCategory = btn.getAttribute("data-filter");
-
-            resumeCardEls.forEach(card => {
-                card.classList.toggle("hidden", card.getAttribute("data-category") !== selectedCategory);
-            });
-
-            resumeFilterBtns.forEach(b => {
-                b.classList.remove("bg-indigo-500", "dark:bg-orange-500", "text-white");
-                b.classList.add("bg-gray-200", "dark:bg-gray-800", "text-gray-700", "dark:text-gray-300", "border", "border-gray-300", "dark:border-gray-700");
-            });
-
-            btn.classList.remove("bg-gray-200", "dark:bg-gray-800", "dark:text-gray-300", "text-gray-700");
-            btn.classList.add("bg-indigo-500", "dark:bg-orange-500", "text-white");
-        });
-    });
+  });
+});
 
     // Debounce Function
     function debounce(fn, delay) {
