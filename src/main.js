@@ -109,24 +109,30 @@ mobileMenu?.addEventListener('touchmove', e => {
   });
 
    // Navbar Active Section Highlighting
-  const sections = document.querySelectorAll("section");
-  const navLinks = document.querySelectorAll("nav a");
+   // ✅ NEW: Improved section highlighting (especially for About/Resume)
+const navLinks = document.querySelectorAll("nav a, .mobile-nav-link");
+const sections = document.querySelectorAll("section[id]");
 
-  const sectionObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          link.classList.remove("active"); // remove from all
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        const linkTarget = link.getAttribute("href")?.substring(1);
+        if (linkTarget === entry.target.id) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
+  });
+}, {
+  threshold: 0.1,
+  rootMargin: "-100px 0px -40% 0px" // Tweak this if needed
+});
 
-          if (link.getAttribute("href").substring(1) === entry.target.id) {
-            link.classList.add("active"); // apply to current
-          }
-        });
-      }
-    });
-  }, { threshold: 0.5 });
+sections.forEach(section => sectionObserver.observe(section));
 
-  sections.forEach(section => sectionObserver.observe(section));
 
 
   const stored = localStorage.getItem('theme');

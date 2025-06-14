@@ -13,15 +13,6 @@ html {
         overflow-x: hidden;
       }
 
-      .badge {
-        background-color: #e0e7ff;
-        color: #4338ca;
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 9999px;
-        font-weight: 600;
-      }
-
       .dark {
         background-color: #1a1a1a;
         color: #ffffff;
@@ -116,10 +107,6 @@ html {
 
       .btn-secondary {
         @apply bg-gray-200 dark:bg-gray-600 px-3 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-500;
-      }
-
-      .badge {
-        @apply inline-block bg-gray-200 dark:bg-gray-600 text-sm px-2 py-1 rounded;
       }
 
       /* Move pagination dots downward */
