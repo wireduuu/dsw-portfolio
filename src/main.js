@@ -762,26 +762,55 @@ window.addEventListener("resize", () => {
         }, 5000);
     });
 
-    // Resume Modal Handling
-    const openBtn = document.getElementById("openResumeModal");
-    const closeBtn = document.getElementById("closeResumeModal");
-    const modal = document.getElementById("resumeModal");
-    const iframe = document.getElementById("resumeIframe");
-    const pdfUrl = "resume/Derrick_Sarfo_Wiredu_Resume.pdf";
 
-    openBtn?.addEventListener("click", () => {
-        modal.classList.remove("hidden");
-        if (!iframe.src) {
-            iframe.src = pdfUrl;
-            iframe.classList.remove("hidden");
-        }
+    // Resume Modal
+    const openResumeBtn = document.getElementById("openResumeModal");
+    const closeResumeBtn = document.getElementById("closeResumeModal");
+    const resumeModal = document.getElementById("resumeModal");
+    const resumeIframe = document.getElementById("resumeIframe");
+
+    openResumeBtn?.addEventListener("click", () => {
+      resumeModal.classList.remove("hidden");
+      if (!resumeIframe.src) {
+        resumeIframe.src = "/resume/Derrick_Sarfo_Wiredu_Resume.pdf";
+        resumeIframe.classList.remove("hidden");
+      }
     });
 
-    closeBtn?.addEventListener("click", () => modal.classList.add("hidden"));
-
-    modal?.addEventListener("click", (e) => {
-        if (e.target === modal) modal.classList.add("hidden");
+    closeResumeBtn?.addEventListener("click", () => {
+      resumeModal.classList.add("hidden");
+      resumeIframe.src = "";
+      resumeIframe.classList.add("hidden");
     });
+
+    resumeModal?.addEventListener("click", (e) => {
+      if (e.target === resumeModal) resumeModal.classList.add("hidden");
+    });
+
+    // CV Modal
+    const openCvBtn = document.getElementById("openCvModal");
+    const closeCvBtn = document.getElementById("closeCvModal");
+    const cvModal = document.getElementById("cvModal");
+    const cvIframe = document.getElementById("cvIframe");
+
+    openCvBtn?.addEventListener("click", () => {
+      cvModal.classList.remove("hidden");
+      if (!cvIframe.src) {
+        cvIframe.src = "/cv/Derrick_Sarfo_Wiredu_CV.pdf";
+        cvIframe.classList.remove("hidden");
+      }
+    });
+
+    closeCvBtn?.addEventListener("click", () => {
+      cvModal.classList.add("hidden");
+      cvIframe.src = "";
+      cvIframe.classList.add("hidden");
+    });
+
+    cvModal?.addEventListener("click", (e) => {
+      if (e.target === cvModal) cvModal.classList.add("hidden");
+    });
+
 
     const resumeFilterBtns = document.querySelectorAll(".resume-filter-btn");
 const resumeCardEls = document.querySelectorAll(".resume-card");
