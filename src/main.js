@@ -763,121 +763,183 @@ window.addEventListener("resize", () => {
     });
 
 
-    // Resume Modal
-    const openResumeBtn = document.getElementById("openResumeModal");
-    const closeResumeBtn = document.getElementById("closeResumeModal");
-    const resumeModal = document.getElementById("resumeModal");
-    const resumeIframe = document.getElementById("resumeIframe");
+  // === Resume Modal Handling ===
+  const openBtn = document.getElementById("openResumeModal");
+  const closeBtn = document.getElementById("closeResumeModal");
+  const modal = document.getElementById("resumeModal");
+  const iframe = document.getElementById("resumeIframe");
+  const pdfUrl = "resume/Derrick_Sarfo_Wiredu_Resume.pdf";
 
-    openResumeBtn?.addEventListener("click", () => {
-      resumeModal.classList.remove("hidden");
-      if (!resumeIframe.src) {
-        resumeIframe.src = "/resume/Derrick_Sarfo_Wiredu_Resume.pdf";
-        resumeIframe.classList.remove("hidden");
-      }
-    });
+  function openModal() {
+    modal.classList.remove("hidden");
+    document.body.classList.add("modal-open");
 
-    closeResumeBtn?.addEventListener("click", () => {
-      resumeModal.classList.add("hidden");
-      resumeIframe.src = "";
-      resumeIframe.classList.add("hidden");
-    });
+    // Load iframe once
+    if (!iframe.src) {
+      iframe.src = pdfUrl;
+    }
+    iframe.classList.remove("hidden");
+  }
 
-    resumeModal?.addEventListener("click", (e) => {
-      if (e.target === resumeModal) resumeModal.classList.add("hidden");
-    });
+  function closeModal() {
+  modal.classList.add("hidden");
+  document.body.classList.remove("modal-open");
+  iframe.src = ""; // Clear the PDF
+  iframe.classList.add("hidden");
+  // Optional: scroll back to Download Center
+  document.getElementById("download").scrollIntoView({ behavior: "smooth" });
+}
 
-    // CV Modal
-    const openCvBtn = document.getElementById("openCvModal");
-    const closeCvBtn = document.getElementById("closeCvModal");
-    const cvModal = document.getElementById("cvModal");
-    const cvIframe = document.getElementById("cvIframe");
 
-    openCvBtn?.addEventListener("click", () => {
-      cvModal.classList.remove("hidden");
-      if (!cvIframe.src) {
-        cvIframe.src = "/cv/Derrick_Sarfo_Wiredu_CV.pdf";
-        cvIframe.classList.remove("hidden");
-      }
-    });
+  openBtn?.addEventListener("click", (e) => {
+    e.preventDefault(); // ✅ Prevent default anchor behavior
+    openModal();
+  });
 
-    closeCvBtn?.addEventListener("click", () => {
+  closeBtn?.addEventListener("click", () => closeModal());
+
+  modal?.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // === CV Modal Handling ===
+  const openCvBtn = document.getElementById("openCvModal");
+  const closeCvBtn = document.getElementById("closeCvModal");
+  const cvModal = document.getElementById("cvModal");
+  const cvIframe = document.getElementById("cvIframe");
+  const cvPdfUrl = "/cv/Derrick_Sarfo_Wiredu_CV.pdf";
+
+  openCvBtn?.addEventListener("click", () => {
+    cvModal.classList.remove("hidden");
+    if (!cvIframe.src) {
+      cvIframe.src = cvPdfUrl;
+      cvIframe.classList.remove("hidden");
+    }
+  });
+
+  closeCvBtn?.addEventListener("click", () => {
+    cvModal.classList.add("hidden");
+    cvIframe.src = "";
+    cvIframe.classList.add("hidden");
+  });
+
+  cvModal?.addEventListener("click", (e) => {
+    if (e.target === cvModal) {
       cvModal.classList.add("hidden");
       cvIframe.src = "";
       cvIframe.classList.add("hidden");
-    });
+    }
+  });
 
-    cvModal?.addEventListener("click", (e) => {
-      if (e.target === cvModal) cvModal.classList.add("hidden");
+  // Resume/CV filter buttons
+  const filterButtons = document.querySelectorAll(".download-filter-btn");
+  const downloadCards = document.querySelectorAll(".resume-cv-card");
+
+  let currentCard = document.querySelector('[data-card="resume"]'); // Default
+
+  filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+
+      filterButtons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      const target = button.getAttribute("data-target");
+      const newCard = document.querySelector(`[data-card="${target}"]`);
+
+      if (currentCard === newCard) return;
+
+      // Toggle active button styling
+      filterButtons.forEach(btn => {
+        btn.classList.remove("bg-indigo-600", "text-white");
+        btn.classList.add("bg-gray-200", "dark:bg-gray-700", "text-gray-800", "dark:text-white");
+      });
+      button.classList.remove("bg-gray-200", "dark:bg-gray-700", "text-gray-800", "dark:text-white");
+      button.classList.add("bg-indigo-600", "text-white");
+
+      // Animate out current card
+      currentCard.classList.remove("fade-in");
+      currentCard.classList.add("fade-out");
+
+      setTimeout(() => {
+        currentCard.classList.add("hidden");
+        currentCard.classList.remove("fade-out");
+
+        // Animate in new card
+        newCard.classList.remove("hidden");
+        newCard.classList.add("fade-in");
+
+        currentCard = newCard;
+      }, 300); // Duration matches CSS transition time
     });
+  });
 
 
     const resumeFilterBtns = document.querySelectorAll(".resume-filter-btn");
-const resumeCardEls = document.querySelectorAll(".resume-card");
-const defaultFilter = "major";
+    const resumeCardEls = document.querySelectorAll(".resume-card");
+    const defaultFilter = "major";
 
-// Set initial card visibility on load
-resumeCardEls.forEach(card => {
-  const isVisible = card.getAttribute("data-category") === defaultFilter;
-  card.classList.toggle("hidden", !isVisible);
-});
-
-// Set initial active button state
-resumeFilterBtns.forEach(btn => {
-  const isActive = btn.getAttribute("data-filter") === defaultFilter;
-  btn.classList.toggle("bg-indigo-500", isActive);
-  btn.classList.toggle("dark:bg-orange-500", isActive);
-  btn.classList.toggle("text-white", isActive);
-  btn.classList.toggle("bg-gray-200", !isActive);
-  btn.classList.toggle("dark:bg-gray-800", !isActive);
-  btn.classList.toggle("text-gray-700", !isActive);
-  btn.classList.toggle("dark:text-gray-300", !isActive);
-});
-
-// Add click interaction
-resumeFilterBtns.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const selectedCategory = btn.getAttribute("data-filter");
-
-    // 👉 Immediately update active styling
-    resumeFilterBtns.forEach(b => {
-      b.classList.remove(
-        "bg-indigo-500",
-        "dark:bg-orange-500",
-        "text-white",
-        "border",
-        "border-gray-300",
-        "dark:border-gray-700"
-      );
-      b.classList.add(
-        "bg-gray-200",
-        "dark:bg-gray-800",
-        "text-gray-700",
-        "dark:text-gray-300",
-        "transition-colors",
-        "duration-150"
-      );
-    });
-
-    btn.classList.remove(
-      "bg-gray-200",
-      "dark:bg-gray-800",
-      "text-gray-700",
-      "dark:text-gray-300"
-    );
-    btn.classList.add(
-      "bg-indigo-500",
-      "dark:bg-orange-500",
-      "text-white"
-    );
-
-    // 🔄 Filter the cards
+    // Set initial card visibility on load
     resumeCardEls.forEach(card => {
-      const matches = card.getAttribute("data-category") === selectedCategory;
-      card.classList.toggle("hidden", !matches);
+      const isVisible = card.getAttribute("data-category") === defaultFilter;
+      card.classList.toggle("hidden", !isVisible);
     });
-  });
-});
+
+    // Set initial active button state
+    resumeFilterBtns.forEach(btn => {
+      const isActive = btn.getAttribute("data-filter") === defaultFilter;
+      btn.classList.toggle("bg-indigo-500", isActive);
+      btn.classList.toggle("dark:bg-orange-500", isActive);
+      btn.classList.toggle("text-white", isActive);
+      btn.classList.toggle("bg-gray-200", !isActive);
+      btn.classList.toggle("dark:bg-gray-800", !isActive);
+      btn.classList.toggle("text-gray-700", !isActive);
+      btn.classList.toggle("dark:text-gray-300", !isActive);
+    });
+
+    // Add click interaction
+    resumeFilterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const selectedCategory = btn.getAttribute("data-filter");
+
+        // 👉 Immediately update active styling
+        resumeFilterBtns.forEach(b => {
+          b.classList.remove(
+            "bg-indigo-500",
+            "dark:bg-orange-500",
+            "text-white",
+            "border",
+            "border-gray-300",
+            "dark:border-gray-700"
+          );
+          b.classList.add(
+            "bg-gray-200",
+            "dark:bg-gray-800",
+            "text-gray-700",
+            "dark:text-gray-300",
+            "transition-colors",
+            "duration-150"
+          );
+        });
+
+        btn.classList.remove(
+          "bg-gray-200",
+          "dark:bg-gray-800",
+          "text-gray-700",
+          "dark:text-gray-300"
+        );
+        btn.classList.add(
+          "bg-indigo-500",
+          "dark:bg-orange-500",
+          "text-white"
+        );
+
+        // 🔄 Filter the cards
+        resumeCardEls.forEach(card => {
+          const matches = card.getAttribute("data-category") === selectedCategory;
+          card.classList.toggle("hidden", !matches);
+        });
+      });
+    });
 
     // Debounce Function
     function debounce(fn, delay) {

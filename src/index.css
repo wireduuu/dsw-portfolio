@@ -3,340 +3,373 @@
 @tailwind utilities;
 
 html {
-        scroll-behavior: smooth;
-        overflow-x: hidden;
-      }
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
-      body {
-        transition: background-color 0.3s, color 0.3s;
-        max-width: 100vw;
-        overflow-x: hidden;
-      }
+body {
+  transition: background-color 0.3s, color 0.3s;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
 
-      .dark {
-        background-color: #1a1a1a;
-        color: #ffffff;
-      }
+body.modal-open {
+  overflow: hidden !important;
+}
 
-      .dark a {
-        color: #ffffff;
-      }
+.resume-cv-card {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  opacity: 1;
+  transform: scale(1);
+}
 
-      nav a.active {
-        @apply text-indigo-600 font-bold;
-      }
+.resume-cv-card.fade-out {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
 
-      .dark nav a.active {
-        @apply text-indigo-400 font-bold;
-      }
+.resume-cv-card.fade-in {
+  opacity: 1;
+  transform: scale(1);
+}
 
-      .mobile-nav-link {
-        @apply block py-2 px-3 rounded text-sm font-medium text-gray-800 dark:text-white hover:bg-indigo-100 dark:hover:bg-gray-700 transition;
-      }
+.download-filter-btn {
+  @apply rounded-full px-4 py-2 font-medium shadow transition-all duration-300 hover:scale-105 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-100;
+}
 
-      .mobile-nav-link.active {
-        @apply bg-indigo-600 dark:bg-orange-500 text-white;
-      }
+.download-filter-btn.active {
+  @apply bg-indigo-600 text-white;
+}
 
-      .dark .mobile-nav-link.active {
-        @apply text-white;
-        }
+.dark .download-filter-btn.active {
+  @apply bg-indigo-600 text-white;
+}
 
-      #mobile-overlay {
-        transition: opacity 0.3s ease;
-        opacity: 0;
-      }
-      #mobile-overlay:not(.hidden) {
-        opacity: 1;
-      }
+.dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
 
-      #menu-toggle.open .bar:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-      }
+.dark a {
+  color: #ffffff;
+}
 
-      #menu-toggle.open .bar:nth-child(2) {
-        opacity: 0;
-      }
+nav a.active {
+  @apply text-indigo-600 font-bold;
+}
 
-      #menu-toggle.open .bar:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-      }
+.dark nav a.active {
+  @apply text-indigo-400 font-bold;
+}
 
-      .scroll-top-btn {
-        transition: opacity 0.3s ease;
-        opacity: 0;
-        pointer-events: none;
-      }
-      .scroll-top-btn.show {
-        opacity: 1;
-        pointer-events: auto;
-      }
+.mobile-nav-link {
+  @apply block py-2 px-3 rounded text-sm font-medium text-gray-800 dark:text-white hover:bg-indigo-100 dark:hover:bg-gray-700 transition;
+}
 
-      .dragging {
-        cursor: grabbing;
-        -webkit-user-select: none;
-        user-select: none;
-      }
+.mobile-nav-link.active {
+  @apply bg-indigo-600 dark:bg-orange-500 text-white;
+}
 
-      /* Hide scrollbar for Webkit (Chrome, Safari) */
-      .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-      }
+.dark .mobile-nav-link.active {
+  @apply text-white;
+}
 
-      #projectGridWrapper {
-        -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
-      }
+#mobile-overlay {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+#mobile-overlay:not(.hidden) {
+  opacity: 1;
+}
 
-      /* Hide scrollbar for IE, Edge, Firefox */
-      .scrollbar-hide {
-        -ms-overflow-style: none; /* IE & Edge */
-        scrollbar-width: none; /* Firefox */
-      }
+#menu-toggle.open .bar:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
 
-      #projectGridWrapper {
-        scroll-snap-type: x mandatory;
-        overflow-x: auto;
-      }
-      .project-card {
-        scroll-snap-align: start;
-      }
+#menu-toggle.open .bar:nth-child(2) {
+  opacity: 0;
+}
 
-      .btn-primary {
-        @apply text-white bg-indigo-600 px-3 py-2 rounded hover:bg-indigo-700;
-      }
+#menu-toggle.open .bar:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
 
-      .btn-secondary {
-        @apply bg-gray-200 dark:bg-gray-600 px-3 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-500;
-      }
+.scroll-top-btn {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-top-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-      /* Move pagination dots downward */
-      .swiper-pagination {
-        position: relative !important; /* Override absolute */
-        bottom: auto !important; /* Disable bottom positioning */
-        margin-top: 30px !important; /* Push down */
-        text-align: center;
-        width: 100%;
-      }
+.dragging {
+  cursor: grabbing;
+  -webkit-user-select: none;
+  user-select: none;
+}
 
-      /* Change color of inactive dots */
-      .swiper-pagination-bullet {
-        background-color: #a5b4fc; /* lighter indigo */
-        opacity: 0.7;
-      }
+/* Hide scrollbar for Webkit (Chrome, Safari) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
-      /* Change color of active dot */
-      .swiper-pagination-bullet-active {
-        background-color: #5c6ac4; /* bright indigo */
-        opacity: 1;
-      }
+#projectGridWrapper {
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+}
 
-      /* Default filter styles */
-      .skill-filter,
-      .project-filter {
-        @apply px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium transition-all duration-300 shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500;
-      }
+/* Hide scrollbar for IE, Edge, Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
 
-      /* Active filters in light mode */
-      .skill-filter.active,
-      .project-filter.active {
-        @apply bg-indigo-600 text-white shadow-lg;
-      }
+#projectGridWrapper {
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+}
+.project-card {
+  scroll-snap-align: start;
+}
 
-      /* Override active filters in dark mode */
-      .dark .skill-filter.active,
-      .dark .project-filter.active {
-        @apply bg-orange-500 text-white shadow-lg;
-      }
+.btn-primary {
+  @apply text-white bg-indigo-600 px-3 py-2 rounded hover:bg-indigo-700;
+}
 
-      /* Mobile Skills Swiper */
-      .skillsSwiper {
-        width: 100%;
-        padding-bottom: 40px; /* Space for pagination */
-      }
+.btn-secondary {
+  @apply bg-gray-200 dark:bg-gray-600 px-3 py-2 rounded hover:bg-gray-300 dark:hover:bg-gray-500;
+}
 
-      .skillsSwiper .swiper-slide {
-        width: 100%;
-        height: auto;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        padding: 0 0.5rem;
-      }
+/* Move pagination dots downward */
+.swiper-pagination {
+  position: relative !important; /* Override absolute */
+  bottom: auto !important; /* Disable bottom positioning */
+  margin-top: 30px !important; /* Push down */
+  text-align: center;
+  width: 100%;
+}
 
-      .projectSwiper .swiper-slide {
-        opacity: 0.5;
-        transform: scale(0.95);
-        transition: transform 0.3s ease, opacity 0.3s ease;
-      }
+/* Change color of inactive dots */
+.swiper-pagination-bullet {
+  background-color: #a5b4fc; /* lighter indigo */
+  opacity: 0.7;
+}
 
-      .projectSwiper .swiper-slide-active {
-        opacity: 1;
-        transform: scale(1);
-      }
+/* Change color of active dot */
+.swiper-pagination-bullet-active {
+  background-color: #5c6ac4; /* bright indigo */
+  opacity: 1;
+}
 
-      .projectSwiper:hover #project-prev,
-      .projectSwiper:hover #project-next {
-        opacity: 1;
-        transform: translateY(-50%) scale(1);
-      }
+/* Default filter styles */
+.skill-filter,
+.project-filter {
+  @apply px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-100 font-medium transition-all duration-300 shadow transition hover:scale-105 hover:bg-gray-300 dark:hover:bg-gray-500;
+}
 
-      #project-prev,
-      #project-next {
-        opacity: 0.7;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-      }
+/* Active filters in light mode */
+.skill-filter.active,
+.project-filter.active {
+  @apply bg-indigo-600 text-white shadow-lg;
+}
 
-      /* Pagination styling */
-      .skillsSwiper .swiper-pagination-bullet {
-        background-color: #a5b4fc;
-        opacity: 0.7;
-        width: 10px;
-        height: 10px;
-      }
+/* Override active filters in dark mode */
+.dark .skill-filter.active,
+.dark .project-filter.active {
+  @apply bg-orange-500 text-white shadow-lg;
+}
 
-      .skillsSwiper .swiper-pagination-bullet-active {
-        background-color: #6366f1;
-        opacity: 1;
-      }
+/* Mobile Skills Swiper */
+.skillsSwiper {
+  width: 100%;
+  padding-bottom: 40px; /* Space for pagination */
+}
 
-      /* Ensure cards maintain consistent height */
-      .skillsSwiper .swiper-slide > div {
-        height: 100%;
-      }
+.skillsSwiper .swiper-slide {
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 0 0.5rem;
+}
 
-      .swiper-slide {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+.projectSwiper .swiper-slide {
+  opacity: 0.5;
+  transform: scale(0.95);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
-      /* Light mode - white background */
-      .projectSwiper .swiper-slide {
-        background-color: white;
-        color: text-gray-600; /* Ensures text remains visible */
-        @apply text-black;
-      }
+.projectSwiper .swiper-slide-active {
+  opacity: 1;
+  transform: scale(1);
+}
 
-      /* Dark mode - dark background */
-      .dark .projectSwiper .swiper-slide {
-        color: white;
-      }
+.projectSwiper:hover #project-prev,
+.projectSwiper:hover #project-next {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
 
-      .projectSwiper .swiper-pagination {
-        display: flex !important;
-        justify-content: center;
-        align-items: center;
-        gap: 4px !important;
-        margin-top: 1rem;
-      }
+#project-prev,
+#project-next {
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
 
-      .projectSwiper .swiper-pagination-bullet {
-        background-color: #a5b4fc;
-        opacity: 0.7;
-        width: 10px;
-        height: 10px;
-        border-radius: 9999px;
-        margin: 0 !important; /* override Swiper default */
-      }
+/* Pagination styling */
+.skillsSwiper .swiper-pagination-bullet {
+  background-color: #a5b4fc;
+  opacity: 0.7;
+  width: 10px;
+  height: 10px;
+}
 
-      .projectSwiper .swiper-pagination-bullet-active {
-        background-color: #6366f1;
-        opacity: 1;
-      }
+.skillsSwiper .swiper-pagination-bullet-active {
+  background-color: #6366f1;
+  opacity: 1;
+}
 
-      /* --- Fade-In Keyframes (with scale + translate) --- */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.95) translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-      }
+/* Ensure cards maintain consistent height */
+.skillsSwiper .swiper-slide > div {
+  height: 100%;
+}
 
-      /* --- Fade-Out Keyframes (for removing slides smoothly) --- */
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-        }
-        to {
-          opacity: 0;
-          transform: scale(0.95) translateY(20px);
-        }
-      }
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-      /* --- Slide Base Animation State --- */
-      .skillsSwiper .swiper-slide {
-        opacity: 0;
-        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      }
+/* Light mode - white background */
+.projectSwiper .swiper-slide {
+  background-color: white;
+  color: text-gray-600; /* Ensures text remains visible */
+  @apply text-black;
+}
 
-      /* --- Staggered Animations for Visual Depth --- */
-      .swiper-slide:nth-child(1) {
-        animation-delay: 0.05s;
-      }
-      .swiper-slide:nth-child(2) {
-        animation-delay: 0.1s;
-      }
-      .swiper-slide:nth-child(3) {
-        animation-delay: 0.15s;
-      }
-      .swiper-slide:nth-child(4) {
-        animation-delay: 0.2s;
-      }
-      .swiper-slide:nth-child(5) {
-        animation-delay: 0.25s;
-      }
-      .swiper-slide:nth-child(6) {
-        animation-delay: 0.3s;
-      }
-      .swiper-slide:nth-child(7) {
-        animation-delay: 0.35s;
-      }
+/* Dark mode - dark background */
+.dark .projectSwiper .swiper-slide {
+  color: white;
+}
 
-      /* --- Optional: Reusable Utility Classes --- */
-      .fade-in {
-        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      }
+.projectSwiper .swiper-pagination {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 4px !important;
+  margin-top: 1rem;
+}
 
-      .fade-out {
-        animation: fadeOut 0.4s ease-in-out forwards;
-        pointer-events: none;
-      }
+.projectSwiper .swiper-pagination-bullet {
+  background-color: #a5b4fc;
+  opacity: 0.7;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  margin: 0 !important; /* override Swiper default */
+}
 
-      #skillsGrid > div {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-      }
-      #skillsGrid > div:hover {
-        transform: translateY(-6px) scale(1.03);
-        box-shadow: 0 12px 20px rgba(99, 102, 241, 0.25); /* Indigo-ish shadow */
-      }
+.projectSwiper .swiper-pagination-bullet-active {
+  background-color: #6366f1;
+  opacity: 1;
+}
 
-      /* Scope styles only to skills swiper wrapper */
-      .skills-swiper-wrapper > .swiper-slide {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        padding: 1rem 0.25rem 2.5rem;
-      }
+/* --- Fade-In Keyframes (with scale + translate) --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 
-      .proficiency-bar {
-        transition: width 1.2s ease-in-out;
-        background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
-      }
+/* --- Fade-Out Keyframes (for removing slides smoothly) --- */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+}
 
-      .dark .proficiency-bar {
-        background-color: #f97316; /* Tailwind orange-500 for dark mode */
-      }
+/* --- Slide Base Animation State --- */
+.skillsSwiper .swiper-slide {
+  opacity: 0;
+  animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
 
-      .proficiency-text {
-        color: rgba(99, 102, 241, 1); /* indigo for light mode */
-      }
+/* --- Staggered Animations for Visual Depth --- */
+.swiper-slide:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.swiper-slide:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.swiper-slide:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.swiper-slide:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.swiper-slide:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.swiper-slide:nth-child(6) {
+  animation-delay: 0.3s;
+}
+.swiper-slide:nth-child(7) {
+  animation-delay: 0.35s;
+}
 
-      .dark .proficiency-text {
-        color: #f97316; /* Tailwind orange-400 for dark mode */
-      }
+/* --- Optional: Reusable Utility Classes --- */
+.fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.4s ease-in-out forwards;
+  pointer-events: none;
+}
+
+#skillsGrid > div {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+#skillsGrid > div:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 20px rgba(99, 102, 241, 0.25); /* Indigo-ish shadow */
+}
+
+/* Scope styles only to skills swiper wrapper */
+.skills-swiper-wrapper > .swiper-slide {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  padding: 1rem 0.25rem 2.5rem;
+}
+
+.proficiency-bar {
+  transition: width 1.2s ease-in-out;
+  background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
+}
+
+.dark .proficiency-bar {
+  background-color: #f97316; /* Tailwind orange-500 for dark mode */
+}
+
+.proficiency-text {
+  color: rgba(99, 102, 241, 1); /* indigo for light mode */
+}
+
+.dark .proficiency-text {
+  color: #f97316; /* Tailwind orange-400 for dark mode */
+}
