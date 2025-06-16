@@ -613,7 +613,7 @@ function renderSkills(category = "all") {
     });
 
   } else {
-    // ✅ Desktop View: Show grid
+    // Desktop View: Show grid
     swiperContainer?.classList.add("hidden");
     pagination?.classList.add("hidden");
     skillsGrid.classList.remove("hidden");
@@ -632,7 +632,7 @@ function renderSkills(category = "all") {
     });
   }
 
-  // ✅ Trigger animations once
+  // Trigger animations once
   requestAnimationFrame(() => {
     triggerAnimationsOnce();
     animateOnScrollOnce();
@@ -662,7 +662,7 @@ window.addEventListener("resize", () => {
               bar.style.width = bar.getAttribute("data-percentage") + "%";
             }
 
-            observer.unobserve(entry.target); // ✅ Avoid retriggers
+            observer.unobserve(entry.target); // Avoid retriggers
           }
         });
       }, { threshold: 0.2 });
@@ -686,7 +686,7 @@ window.addEventListener("resize", () => {
                   clearInterval(interval);
                 }
               }, 15);
-              observer.unobserve(entry.target); // ✅ Important
+              observer.unobserve(entry.target); // Important
             }
           });
         }, { threshold: 0.5 });
@@ -695,15 +695,40 @@ window.addEventListener("resize", () => {
       });
     }
 
-  renderSkills(); // ✅ Initial call
+  // Initial render
+  renderSkills(); 
 
+  // Skill filter logic
   document.querySelectorAll(".skill-filter").forEach(btn => {
     btn.addEventListener("click", () => {
+      // Remove active class from all buttons
       document.querySelectorAll(".skill-filter").forEach(b =>
         b.classList.remove("active", "bg-indigo-600", "text-white")
       );
+
+      // Add active class to clicked button
       btn.classList.add("active", "bg-indigo-600", "text-white");
-      renderSkills(btn.getAttribute("data-category"));
+
+      // Lock in current height of the skills grid to prevent layout jump
+      const skillsGrid = document.getElementById("skillsGrid");
+      const previousHeight = skillsGrid.offsetHeight;
+      skillsGrid.style.minHeight = previousHeight + "px";
+
+      // Re-render filtered skills
+      const selectedCategory = btn.getAttribute("data-category");
+      renderSkills(selectedCategory);
+
+      // Scroll back to Skills section (tablet & desktop only)
+      const skillsSection = document.getElementById("skills");
+      if (skillsSection && window.innerWidth >= 768) {
+        skillsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // Clear minHeight after render + transition
+      setTimeout(() => {
+        skillsGrid.style.minHeight = "auto";
+        if (window.AOS) AOS.refresh(); // Optional: re-trigger AOS animations
+      }, 600); // Should match transition duration
     });
   });
 
@@ -832,46 +857,59 @@ window.addEventListener("resize", () => {
   });
 
   // Resume/CV filter buttons
+  function isMobileView() {
+    return window.innerWidth < 768;
+  }
+
   const filterButtons = document.querySelectorAll(".download-filter-btn");
   const downloadCards = document.querySelectorAll(".resume-cv-card");
+  let currentCard = document.querySelector('[data-card="resume"]');
 
-  let currentCard = document.querySelector('[data-card="resume"]'); // Default
+  function applyMobileFilter(target) {
+    const newCard = document.querySelector(`[data-card="${target}"]`);
+    if (!newCard || newCard === currentCard) return;
+
+    currentCard?.classList.add("hidden");
+    currentCard?.classList.remove("fade-in");
+
+    newCard.classList.remove("hidden");
+    newCard.classList.add("fade-in");
+
+    currentCard = newCard;
+  }
 
   filterButtons.forEach(button => {
     button.addEventListener("click", () => {
+      if (!isMobileView()) return;
 
       filterButtons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
 
       const target = button.getAttribute("data-target");
-      const newCard = document.querySelector(`[data-card="${target}"]`);
-
-      if (currentCard === newCard) return;
-
-      // Toggle active button styling
-      filterButtons.forEach(btn => {
-        btn.classList.remove("bg-indigo-600", "text-white");
-        btn.classList.add("bg-gray-200", "dark:bg-gray-700", "text-gray-800", "dark:text-white");
-      });
-      button.classList.remove("bg-gray-200", "dark:bg-gray-700", "text-gray-800", "dark:text-white");
-      button.classList.add("bg-indigo-600", "text-white");
-
-      // Animate out current card
-      currentCard.classList.remove("fade-in");
-      currentCard.classList.add("fade-out");
-
-      setTimeout(() => {
-        currentCard.classList.add("hidden");
-        currentCard.classList.remove("fade-out");
-
-        // Animate in new card
-        newCard.classList.remove("hidden");
-        newCard.classList.add("fade-in");
-
-        currentCard = newCard;
-      }, 300); // Duration matches CSS transition time
+      applyMobileFilter(target);
     });
   });
+
+  function updateCardVisibilityOnResize() {
+    if (!isMobileView()) {
+      // Show both cards
+      downloadCards.forEach(card => card.classList.remove("hidden"));
+      currentCard = null;
+    } else {
+      // Show only selected card
+      const activeBtn = document.querySelector(".download-filter-btn.active");
+      const target = activeBtn?.getAttribute("data-target") || "resume";
+
+      downloadCards.forEach(card => {
+        const isTarget = card.getAttribute("data-card") === target;
+        card.classList.toggle("hidden", !isTarget);
+        if (isTarget) currentCard = card;
+      });
+    }
+  }
+
+  window.addEventListener("resize", updateCardVisibilityOnResize);
+  window.addEventListener("DOMContentLoaded", updateCardVisibilityOnResize);
 
 
     const resumeFilterBtns = document.querySelectorAll(".resume-filter-btn");
