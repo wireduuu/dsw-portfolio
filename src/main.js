@@ -634,9 +634,11 @@ function renderSkills(category = "all") {
 
   // Trigger animations once
   requestAnimationFrame(() => {
+  setTimeout(() => {
     triggerAnimationsOnce();
     animateOnScrollOnce();
-  });
+  }, 50);
+});
 }
 
 let resizeTimer;
@@ -651,59 +653,68 @@ window.addEventListener("resize", () => {
 
   const animatedSkillCards = new WeakSet(); // better memory handling for DOM nodes
 
+  let skillCardObserver;
+
   function triggerAnimationsOnce() {
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      if (animatedSkillCards.has(card)) return; // Skip if already animated
+    if (skillCardObserver) skillCardObserver.disconnect();
 
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
+    skillCardObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          card.classList.remove("opacity-0", "translate-y-10");
+          card.classList.add("opacity-100", "translate-y-0");
 
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-            }
-
-            animatedSkillCards.add(entry.target); // Mark this card as animated
-            observer.unobserve(entry.target);
+          const bar = card.querySelector(".proficiency-bar");
+          if (bar) {
+            bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
-        });
-      }, { threshold: 0.25 });
 
-      observer.observe(card);
+          animatedSkillCards.add(card);
+          skillCardObserver.unobserve(card);
+        }
+      });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      if (!animatedSkillCards.has(card)) {
+        skillCardObserver.observe(card);
+      }
     });
   }
-
       const animatedCounters = new WeakSet();
 
+  let counterObserver;
+
   function animateOnScrollOnce() {
+    if (counterObserver) counterObserver.disconnect();
+
+    counterObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.count, 10);
+          let count = 0;
+
+          const interval = setInterval(() => {
+            if (count < target) {
+              count++;
+              el.textContent = count + "%";
+            } else {
+              clearInterval(interval);
+            }
+          }, 15);
+
+          animatedCounters.add(el);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
     document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      if (animatedCounters.has(el)) return; // Already counted
-
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const target = parseInt(entry.target.dataset.count, 10);
-            let count = 0;
-
-            const interval = setInterval(() => {
-              if (count < target) {
-                count++;
-                entry.target.textContent = count + "%";
-              } else {
-                clearInterval(interval);
-              }
-            }, 15);
-
-            animatedCounters.add(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.5 });
-
-      observer.observe(el);
+      if (!animatedCounters.has(el)) {
+        counterObserver.observe(el);
+      }
     });
   }
 
