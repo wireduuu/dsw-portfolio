@@ -634,11 +634,9 @@ function renderSkills(category = "all") {
 
   // Trigger animations once
   requestAnimationFrame(() => {
-  setTimeout(() => {
     triggerAnimationsOnce();
     animateOnScrollOnce();
-  }, 50);
-});
+  });
 }
 
 let resizeTimer;
@@ -651,91 +649,51 @@ window.addEventListener("resize", () => {
 });
 
 
-  const animatedSkillCards = new WeakSet(); // better memory handling for DOM nodes
-  const animatedSkills = new Set(); // 🔐 Tracks animated skill names
-  const animatedCounters = new Set(); // 🔐 Tracks animated counters
-
-
-  let skillCardObserver;
-
   function triggerAnimationsOnce() {
-    if (skillCardObserver) skillCardObserver.disconnect();
-
-    skillCardObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const card = entry.target;
-          const skillName = card.querySelector("h3")?.textContent?.trim();
-
-          if (animatedSkills.has(skillName)) {
-            skillCardObserver.unobserve(card);
-            return;
-          }
-
-          card.classList.remove("opacity-0", "translate-y-10");
-          card.classList.add("opacity-100", "translate-y-0");
-
-          const bar = card.querySelector(".proficiency-bar");
-          if (bar) {
-            bar.style.width = bar.getAttribute("data-percentage") + "%";
-          }
-
-          animatedSkills.add(skillName);
-          skillCardObserver.unobserve(card);
-        }
-      });
-    }, { threshold: 0.25 });
-
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      const skillName = card.querySelector("h3")?.textContent?.trim();
-      if (!animatedSkills.has(skillName)) {
-        skillCardObserver.observe(card);
-      }
-    });
-  };
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+            entry.target.classList.add("opacity-100", "translate-y-0");
 
-  let counterObserver;
-
-  function animateOnScrollOnce() {
-    if (counterObserver) counterObserver.disconnect();
-
-    counterObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const skillName = el.closest(".proficiency-count")?.previousElementSibling?.textContent?.trim();
-
-          if (animatedCounters.has(skillName)) {
-            counterObserver.unobserve(el);
-            return;
-          }
-
-          const target = parseInt(el.dataset.count, 10);
-          let count = 0;
-
-          const interval = setInterval(() => {
-            if (count < target) {
-              count++;
-              el.textContent = count + "%";
-            } else {
-              clearInterval(interval);
+            const bar = entry.target.querySelector(".proficiency-bar");
+            if (bar) {
+              bar.style.width = bar.getAttribute("data-percentage") + "%";
             }
-          }, 15);
 
-          animatedCounters.add(skillName);
-          counterObserver.unobserve(el);
-        }
-      });
-    }, { threshold: 0.5 });
+            observer.unobserve(entry.target); // Avoid retriggers
+          }
+        });
+      }, { threshold: 0.2 });
 
-    document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      const skillName = el.closest(".proficiency-count")?.previousElementSibling?.textContent?.trim();
-      if (!animatedCounters.has(skillName)) {
-        counterObserver.observe(el);
-      }
+      observer.observe(card);
     });
   }
 
+    function animateOnScrollOnce() {
+      document.querySelectorAll(".proficiency-count strong").forEach(el => {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              let count = 0;
+              const target = parseInt(entry.target.dataset.count, 10);
+              const interval = setInterval(() => {
+                if (count < target) {
+                  count++;
+                  entry.target.textContent = count + "%";
+                } else {
+                  clearInterval(interval);
+                }
+              }, 15);
+              observer.unobserve(entry.target); // Important
+            }
+          });
+        }, { threshold: 0.5 });
+
+        observer.observe(el);
+      });
+    }
 
   // Initial render
   renderSkills(); 
