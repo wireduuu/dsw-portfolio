@@ -565,7 +565,6 @@ function createSkillCard(skill) {
     </div>
   `;
 
-  skillCard.dataset.animated = "false";
   return skillCard;
 }
 
@@ -653,6 +652,9 @@ window.addEventListener("resize", () => {
 
 
   const animatedSkillCards = new WeakSet(); // better memory handling for DOM nodes
+  const animatedSkills = new Set(); // 🔐 Tracks animated skill names
+  const animatedCounters = new Set(); // 🔐 Tracks animated counters
+
 
   let skillCardObserver;
 
@@ -663,8 +665,9 @@ window.addEventListener("resize", () => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const card = entry.target;
+          const skillName = card.querySelector("h3")?.textContent?.trim();
 
-          if (card.dataset.animated === "true") {
+          if (animatedSkills.has(skillName)) {
             skillCardObserver.unobserve(card);
             return;
           }
@@ -677,20 +680,19 @@ window.addEventListener("resize", () => {
             bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
 
-          card.dataset.animated = "true"; // ✅ Mark as animated forever
+          animatedSkills.add(skillName);
           skillCardObserver.unobserve(card);
         }
       });
     }, { threshold: 0.25 });
 
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      if (card.dataset.animated !== "true") {
+      const skillName = card.querySelector("h3")?.textContent?.trim();
+      if (!animatedSkills.has(skillName)) {
         skillCardObserver.observe(card);
       }
     });
-  }
-
-      const animatedCounters = new WeakSet();
+  };
 
   let counterObserver;
 
@@ -701,9 +703,9 @@ window.addEventListener("resize", () => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
+          const skillName = el.closest(".proficiency-count")?.previousElementSibling?.textContent?.trim();
 
-          // Skip if already animated
-          if (el.dataset.animated === "true") {
+          if (animatedCounters.has(skillName)) {
             counterObserver.unobserve(el);
             return;
           }
@@ -720,14 +722,15 @@ window.addEventListener("resize", () => {
             }
           }, 15);
 
-          el.dataset.animated = "true"; // 🔐 Mark as animated
+          animatedCounters.add(skillName);
           counterObserver.unobserve(el);
         }
       });
     }, { threshold: 0.5 });
 
     document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      if (el.dataset.animated !== "true") {
+      const skillName = el.closest(".proficiency-count")?.previousElementSibling?.textContent?.trim();
+      if (!animatedCounters.has(skillName)) {
         counterObserver.observe(el);
       }
     });
