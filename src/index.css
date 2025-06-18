@@ -357,8 +357,26 @@ nav a.active {
   padding: 1rem 0.25rem 2.5rem;
 }
 
+/* Skills Section Specific Styles */
+#skillsGrid > div, 
+.skillsSwiper .swiper-slide > div {
+  will-change: transform, opacity; /* Optimize for animations */
+}
+
+/* Prevent AOS from interfering */
+[data-aos] {
+  pointer-events: none;
+}
+[data-aos].aos-animate {
+  pointer-events: auto;
+}
+
+.skill-card-animate {
+  transform: translateZ(0);
+}
+
 .proficiency-bar {
-  transition: width 1.2s ease-in-out;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
   background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
 }
 
