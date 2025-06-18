@@ -565,6 +565,7 @@ function createSkillCard(skill) {
     </div>
   `;
 
+  skillCard.dataset.animated = "false";
   return skillCard;
 }
 
@@ -663,13 +664,11 @@ window.addEventListener("resize", () => {
         if (entry.isIntersecting) {
           const card = entry.target;
 
-          // Skip if already animated
           if (card.dataset.animated === "true") {
             skillCardObserver.unobserve(card);
             return;
           }
 
-          // Animate
           card.classList.remove("opacity-0", "translate-y-10");
           card.classList.add("opacity-100", "translate-y-0");
 
@@ -678,7 +677,7 @@ window.addEventListener("resize", () => {
             bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
 
-          card.dataset.animated = "true"; // 🔐 Mark as animated
+          card.dataset.animated = "true"; // ✅ Mark as animated forever
           skillCardObserver.unobserve(card);
         }
       });
@@ -753,9 +752,6 @@ window.addEventListener("resize", () => {
       const skillsGrid = document.getElementById("skillsGrid");
       const previousHeight = skillsGrid.offsetHeight;
       skillsGrid.style.minHeight = previousHeight + "px";
-
-      // Reset data-animated markers
-      document.querySelectorAll("[data-animated]").forEach(el => delete el.dataset.animated);
 
       // Re-render filtered skills
       const selectedCategory = btn.getAttribute("data-category");
