@@ -662,6 +662,14 @@ window.addEventListener("resize", () => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const card = entry.target;
+
+          // Skip if already animated
+          if (card.dataset.animated === "true") {
+            skillCardObserver.unobserve(card);
+            return;
+          }
+
+          // Animate
           card.classList.remove("opacity-0", "translate-y-10");
           card.classList.add("opacity-100", "translate-y-0");
 
@@ -670,18 +678,19 @@ window.addEventListener("resize", () => {
             bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
 
-          animatedSkillCards.add(card);
+          card.dataset.animated = "true"; // 🔐 Mark as animated
           skillCardObserver.unobserve(card);
         }
       });
     }, { threshold: 0.25 });
 
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      if (!animatedSkillCards.has(card)) {
+      if (card.dataset.animated !== "true") {
         skillCardObserver.observe(card);
       }
     });
   }
+
       const animatedCounters = new WeakSet();
 
   let counterObserver;
@@ -693,6 +702,13 @@ window.addEventListener("resize", () => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const el = entry.target;
+
+          // Skip if already animated
+          if (el.dataset.animated === "true") {
+            counterObserver.unobserve(el);
+            return;
+          }
+
           const target = parseInt(el.dataset.count, 10);
           let count = 0;
 
@@ -705,18 +721,19 @@ window.addEventListener("resize", () => {
             }
           }, 15);
 
-          animatedCounters.add(el);
+          el.dataset.animated = "true"; // 🔐 Mark as animated
           counterObserver.unobserve(el);
         }
       });
     }, { threshold: 0.5 });
 
     document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      if (!animatedCounters.has(el)) {
+      if (el.dataset.animated !== "true") {
         counterObserver.observe(el);
       }
     });
   }
+
 
   // Initial render
   renderSkills(); 
@@ -736,6 +753,9 @@ window.addEventListener("resize", () => {
       const skillsGrid = document.getElementById("skillsGrid");
       const previousHeight = skillsGrid.offsetHeight;
       skillsGrid.style.minHeight = previousHeight + "px";
+
+      // Reset data-animated markers
+      document.querySelectorAll("[data-animated]").forEach(el => delete el.dataset.animated);
 
       // Re-render filtered skills
       const selectedCategory = btn.getAttribute("data-category");
