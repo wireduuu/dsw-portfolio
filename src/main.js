@@ -649,8 +649,12 @@ window.addEventListener("resize", () => {
 });
 
 
+  const animatedSkillCards = new WeakSet(); // better memory handling for DOM nodes
+
   function triggerAnimationsOnce() {
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      if (animatedSkillCards.has(card)) return; // Skip if already animated
+
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -662,38 +666,46 @@ window.addEventListener("resize", () => {
               bar.style.width = bar.getAttribute("data-percentage") + "%";
             }
 
-            observer.unobserve(entry.target); // Avoid retriggers
+            animatedSkillCards.add(entry.target); // Mark this card as animated
+            observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.2 });
+      }, { threshold: 0.25 });
 
       observer.observe(card);
     });
   }
 
-    function animateOnScrollOnce() {
-      document.querySelectorAll(".proficiency-count strong").forEach(el => {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              let count = 0;
-              const target = parseInt(entry.target.dataset.count, 10);
-              const interval = setInterval(() => {
-                if (count < target) {
-                  count++;
-                  entry.target.textContent = count + "%";
-                } else {
-                  clearInterval(interval);
-                }
-              }, 15);
-              observer.unobserve(entry.target); // Important
-            }
-          });
-        }, { threshold: 0.5 });
+      const animatedCounters = new WeakSet();
 
-        observer.observe(el);
-      });
-    }
+  function animateOnScrollOnce() {
+    document.querySelectorAll(".proficiency-count strong").forEach(el => {
+      if (animatedCounters.has(el)) return; // Already counted
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const target = parseInt(entry.target.dataset.count, 10);
+            let count = 0;
+
+            const interval = setInterval(() => {
+              if (count < target) {
+                count++;
+                entry.target.textContent = count + "%";
+              } else {
+                clearInterval(interval);
+              }
+            }, 15);
+
+            animatedCounters.add(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(el);
+    });
+  }
 
   // Initial render
   renderSkills(); 
