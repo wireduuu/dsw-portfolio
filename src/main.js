@@ -658,11 +658,12 @@ window.addEventListener("resize", () => {
             entry.target.classList.add("opacity-100", "translate-y-0");
 
             const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar) {
+            if (bar && !bar.dataset.animated) {
               bar.style.width = bar.getAttribute("data-percentage") + "%";
+              bar.dataset.animated = "true"; // ✅ mark as animated
             }
 
-            observer.unobserve(entry.target); // Avoid retriggers
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.2 });
@@ -671,29 +672,31 @@ window.addEventListener("resize", () => {
     });
   }
 
-    function animateOnScrollOnce() {
-      document.querySelectorAll(".proficiency-count strong").forEach(el => {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              let count = 0;
-              const target = parseInt(entry.target.dataset.count, 10);
-              const interval = setInterval(() => {
-                if (count < target) {
-                  count++;
-                  entry.target.textContent = count + "%";
-                } else {
-                  clearInterval(interval);
-                }
-              }, 15);
-              observer.unobserve(entry.target); // Important
-            }
-          });
-        }, { threshold: 0.5 });
 
-        observer.observe(el);
-      });
-    }
+      function animateOnScrollOnce() {
+    document.querySelectorAll(".proficiency-count strong").forEach(el => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !entry.target.dataset.animated) {
+            let count = 0;
+            const target = parseInt(entry.target.dataset.count, 10);
+            const interval = setInterval(() => {
+              if (count < target) {
+                count++;
+                entry.target.textContent = count + "%";
+              } else {
+                clearInterval(interval);
+              }
+            }, 15);
+            entry.target.dataset.animated = "true"; // ✅ mark as animated
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(el);
+    });
+  }
 
   // Initial render
   renderSkills(); 
