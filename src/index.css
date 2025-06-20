@@ -355,14 +355,15 @@ nav a.active {
   padding: 1rem 0.25rem 2.5rem;
 }
 
-.proficiency-bar {
+/* .proficiency-bar {
   transition: width 1.2s ease-in-out;
   background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
-}
+*/
+/* 
 
 .dark .proficiency-bar {
   background-color: #f97316; /* Tailwind orange-500 for dark mode */
-}
+*/
 
 .proficiency-text {
   color: rgba(99, 102, 241, 1); /* indigo for light mode */

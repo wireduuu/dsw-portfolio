@@ -519,7 +519,7 @@ sections.forEach(section => sectionObserver.observe(section));
 function createSkillCard(skill) {
   const skillCard = document.createElement("div");
   skillCard.className =
-    "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
+    "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md";
 
     skillCard.style.flex = "1 1 calc(50% - 0.5rem)"; // 50% width minus gap
     skillCard.style.display = "flex";
