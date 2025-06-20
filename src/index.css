@@ -301,13 +301,12 @@ nav a.active {
   }
 }
 
-/* --- Slide Base Animation State --- */
+/* 
 .skillsSwiper .swiper-slide {
   opacity: 0;
   animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* --- Staggered Animations for Visual Depth --- */
 .swiper-slide:nth-child(1) {
   animation-delay: 0.05s;
 }
@@ -330,7 +329,6 @@ nav a.active {
   animation-delay: 0.35s;
 }
 
-/* --- Optional: Reusable Utility Classes --- */
 .fade-in {
   animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -338,7 +336,7 @@ nav a.active {
 .fade-out {
   animation: fadeOut 0.4s ease-in-out forwards;
   pointer-events: none;
-}
+} */
 
 #skillsGrid > div {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
