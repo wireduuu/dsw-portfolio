@@ -232,8 +232,7 @@ nav a.active {
   opacity: 1;
 }
 
-/* Ensure cards maintain consistent height */
-.skillsSwiper .swiper-slide > div {
+/* .skillsSwiper .swiper-slide > div {
   height: 100%;
 }
 
@@ -241,7 +240,7 @@ nav a.active {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 /* Light mode - white background */
 .projectSwiper .swiper-slide {
@@ -339,9 +338,9 @@ nav a.active {
 } */
 
 #skillsGrid > div {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
+
 #skillsGrid > div:hover {
   transform: translateY(-6px) scale(1.03);
   box-shadow: 0 12px 20px rgba(99, 102, 241, 0.25); /* Indigo-ish shadow */
