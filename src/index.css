@@ -378,3 +378,10 @@ nav a.active {
   transition: none !important;
 }
 
+.invisible {
+  visibility: hidden !important;
+}
+
+.visible {
+  visibility: visible !important;
+}

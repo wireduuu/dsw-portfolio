@@ -653,27 +653,28 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && entry.target.dataset.animated !== "true") {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
+  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          entry.target.classList.remove("invisible", "translate-y-10");
+          entry.target.classList.add("visible", "translate-y-0");
 
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-            }
-
-            entry.target.dataset.animated = "true"; // ✅ Mark as animated
-            observer.unobserve(entry.target);
+          const bar = entry.target.querySelector(".proficiency-bar");
+          if (bar) {
+            bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
-        });
-      }, { threshold: 0.2 });
 
-      observer.observe(card);
-    });
-  }
+          entry.target.dataset.animated = "true";
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(card);
+  });
+}
+
 
       function animateOnScrollOnce() {
     document.querySelectorAll(".proficiency-count strong").forEach(el => {
