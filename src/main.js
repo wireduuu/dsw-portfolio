@@ -650,53 +650,25 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
+  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+    card.classList.remove("opacity-0", "translate-y-10");
+    card.classList.add("opacity-100", "translate-y-0");
 
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar && !bar.dataset.animated) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-              bar.dataset.animated = "true"; // ✅ mark as animated
-            }
-
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-
-      observer.observe(card);
-    });
-  }
+    const bar = card.querySelector(".proficiency-bar");
+    if (bar) {
+      bar.style.width = bar.getAttribute("data-percentage") + "%"; // Just set instantly
+    }
+  });
+}
 
 
-      function animateOnScrollOnce() {
-    document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !entry.target.dataset.animated) {
-            let count = 0;
-            const target = parseInt(entry.target.dataset.count, 10);
-            const interval = setInterval(() => {
-              if (count < target) {
-                count++;
-                entry.target.textContent = count + "%";
-              } else {
-                clearInterval(interval);
-              }
-            }, 15);
-            entry.target.dataset.animated = "true"; // ✅ mark as animated
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.5 });
 
-      observer.observe(el);
-    });
-  }
+function animateOnScrollOnce() {
+  document.querySelectorAll(".proficiency-count strong").forEach(el => {
+    el.textContent = el.dataset.count + "%"; // Instantly show target value
+  });
+}
+
 
   // Initial render
   renderSkills(); 
