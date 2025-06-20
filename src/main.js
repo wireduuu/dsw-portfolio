@@ -3,10 +3,6 @@ import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 
 document.addEventListener("DOMContentLoaded", () => {
-
-let hasAnimatedBars = false;
-  let hasCountedPercentages = false;
-
  // === TOGGLE MOBILE NAV ===
 const menuToggle = document.getElementById('menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -654,62 +650,50 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-  if (hasAnimatedBars) return;
+    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+            entry.target.classList.add("opacity-100", "translate-y-0");
 
-  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.remove("opacity-0", "translate-y-10");
-          entry.target.classList.add("opacity-100", "translate-y-0");
+            const bar = entry.target.querySelector(".proficiency-bar");
+            if (bar) {
+              bar.style.width = bar.getAttribute("data-percentage") + "%";
+            }
 
-          const bar = entry.target.querySelector(".proficiency-bar");
-          if (bar && !bar.classList.contains("animated")) {
-            bar.style.width = bar.getAttribute("data-percentage") + "%";
-            bar.classList.add("animated");
+            observer.unobserve(entry.target); // Avoid retriggers
           }
+        });
+      }, { threshold: 0.2 });
 
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    observer.observe(card);
-  });
-
-  hasAnimatedBars = true; // ✅ Set flag after all observers are registered
-}
-
+      observer.observe(card);
+    });
+  }
 
     function animateOnScrollOnce() {
-  if (hasCountedPercentages) return;
-
-  document.querySelectorAll(".proficiency-count strong").forEach(el => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          let count = 0;
-          const target = parseInt(entry.target.dataset.count, 10);
-          const interval = setInterval(() => {
-            if (count < target) {
-              count++;
-              entry.target.textContent = count + "%";
-            } else {
-              clearInterval(interval);
+      document.querySelectorAll(".proficiency-count strong").forEach(el => {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              let count = 0;
+              const target = parseInt(entry.target.dataset.count, 10);
+              const interval = setInterval(() => {
+                if (count < target) {
+                  count++;
+                  entry.target.textContent = count + "%";
+                } else {
+                  clearInterval(interval);
+                }
+              }, 15);
+              observer.unobserve(entry.target); // Important
             }
-          }, 15);
+          });
+        }, { threshold: 0.5 });
 
-          observer.unobserve(entry.target);
-        }
+        observer.observe(el);
       });
-    }, { threshold: 0.5 });
-
-    observer.observe(el);
-  });
-
-  hasCountedPercentages = true; // ✅ Only after attaching observers
-}
-
+    }
 
   // Initial render
   renderSkills(); 
