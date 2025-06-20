@@ -516,57 +516,58 @@ sections.forEach(section => sectionObserver.observe(section));
 
     let skillsSwiperInstance;
 
-function createSkillCard(skill) {
-  const skillCard = document.createElement("div");
-  skillCard.className =
-    "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
+  function createSkillCard(skill) {
+    const skillCard = document.createElement("div");
 
-    skillCard.style.flex = "1 1 calc(50% - 0.5rem)"; // 50% width minus gap
+    // Only apply animation classes if not animated before
+    skillCard.className =
+      "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md transition-all duration-700 ease-out";
+    if (!skill.animated) {
+      skillCard.classList.add("opacity-0", "translate-y-10");
+      skill.animated = true; // Mark as animated to prevent future triggers
+    }
+
+    skillCard.style.flex = "1 1 calc(50% - 0.5rem)";
     skillCard.style.display = "flex";
     skillCard.style.flexDirection = "column";
 
-    // Conditional layout for "Mavis Beacon Teaches Typing"
-  let nameSection = "";
+    // === Conditional Layout for "Mavis Beacon Teaches Typing"
+    const nameSection =
+      skill.name === "Mavis Beacon Teaches Typing"
+        ? `
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+              <span class="text-sm font-medium">Mavis Beacon</span>
+            </div>
+            <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
+          </div>
+        `
+        : `
+          <div class="flex items-center gap-3">
+            <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+            <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
+          </div>
+        `;
 
-  if (skill.name === "Mavis Beacon Teaches Typing") {
-    nameSection = `
-      <div class="flex flex-col">
-        <div class="flex items-center gap-2">
-          <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-          <span class="text-sm font-medium">Mavis Beacon</span>
-        </div>
-        <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
+    // === Full Card Markup
+    skillCard.innerHTML = `
+      ${nameSection}
+      <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
+      <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
+        <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
+      </div>
+      <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
+        <span><strong>${skill.years}</strong> years</span>
+        <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
+        <span class="proficiency-count">
+          <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
+        </span>
       </div>
     `;
-  } else {
-    nameSection = `
-      <div class="flex items-center gap-3">
-        <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-        <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
-      </div>
-    `;
+
+    return skillCard;
   }
-
-  skillCard.innerHTML = `
-    <div class="flex items-center gap-3">
-      <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-      <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
-    </div>
-    <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
-    <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
-      <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
-    </div>
-    <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
-      <span><strong>${skill.years}</strong> years</span>
-      <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
-      <span class="proficiency-count">
-        <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
-      </span>
-    </div>
-  `;
-
-  return skillCard;
-}
 
 function renderSkills(category = "all") {
   const filtered = category === "all"
@@ -653,7 +654,7 @@ window.addEventListener("resize", () => {
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && entry.target.dataset.animated !== "true") {
             entry.target.classList.remove("opacity-0", "translate-y-10");
             entry.target.classList.add("opacity-100", "translate-y-0");
 
@@ -662,7 +663,8 @@ window.addEventListener("resize", () => {
               bar.style.width = bar.getAttribute("data-percentage") + "%";
             }
 
-            observer.unobserve(entry.target); // Avoid retriggers
+            entry.target.dataset.animated = "true"; // ✅ Mark as animated
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.2 });
@@ -671,29 +673,31 @@ window.addEventListener("resize", () => {
     });
   }
 
-    function animateOnScrollOnce() {
-      document.querySelectorAll(".proficiency-count strong").forEach(el => {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              let count = 0;
-              const target = parseInt(entry.target.dataset.count, 10);
-              const interval = setInterval(() => {
-                if (count < target) {
-                  count++;
-                  entry.target.textContent = count + "%";
-                } else {
-                  clearInterval(interval);
-                }
-              }, 15);
-              observer.unobserve(entry.target); // Important
-            }
-          });
-        }, { threshold: 0.5 });
+      function animateOnScrollOnce() {
+    document.querySelectorAll(".proficiency-count strong").forEach(el => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.target.dataset.counted !== "true") {
+            let count = 0;
+            const target = parseInt(entry.target.dataset.count, 10);
+            const interval = setInterval(() => {
+              if (count < target) {
+                count++;
+                entry.target.textContent = count + "%";
+              } else {
+                clearInterval(interval);
+              }
+            }, 15);
 
-        observer.observe(el);
-      });
-    }
+            entry.target.dataset.counted = "true"; // ✅ Mark as counted
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(el);
+    });
+  }
 
   // Initial render
   renderSkills(); 
