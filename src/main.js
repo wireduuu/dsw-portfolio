@@ -3,6 +3,10 @@ import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 
 document.addEventListener("DOMContentLoaded", () => {
+
+let hasAnimatedBars = false;
+  let hasCountedPercentages = false;
+
  // === TOGGLE MOBILE NAV ===
 const menuToggle = document.getElementById('menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -515,8 +519,6 @@ sections.forEach(section => sectionObserver.observe(section));
     ]; // skillsData array here
 
     let skillsSwiperInstance;
-    let hasAnimatedSkills = false;
-
 
 function createSkillCard(skill) {
   const skillCard = document.createElement("div");
@@ -652,8 +654,7 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-  if (hasAnimatedSkills) return; // 🛑 Prevent retriggering
-  hasAnimatedSkills = true; // ✅ Set flag to true
+  if (hasAnimatedBars) return;
 
   document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
     const observer = new IntersectionObserver(entries => {
@@ -663,8 +664,9 @@ window.addEventListener("resize", () => {
           entry.target.classList.add("opacity-100", "translate-y-0");
 
           const bar = entry.target.querySelector(".proficiency-bar");
-          if (bar) {
+          if (bar && !bar.classList.contains("animated")) {
             bar.style.width = bar.getAttribute("data-percentage") + "%";
+            bar.classList.add("animated");
           }
 
           observer.unobserve(entry.target);
@@ -674,11 +676,13 @@ window.addEventListener("resize", () => {
 
     observer.observe(card);
   });
+
+  hasAnimatedBars = true; // ✅ Set flag after all observers are registered
 }
 
 
     function animateOnScrollOnce() {
-  if (hasAnimatedSkills) return;
+  if (hasCountedPercentages) return;
 
   document.querySelectorAll(".proficiency-count strong").forEach(el => {
     const observer = new IntersectionObserver(entries => {
@@ -694,6 +698,7 @@ window.addEventListener("resize", () => {
               clearInterval(interval);
             }
           }, 15);
+
           observer.unobserve(entry.target);
         }
       });
@@ -701,6 +706,8 @@ window.addEventListener("resize", () => {
 
     observer.observe(el);
   });
+
+  hasCountedPercentages = true; // ✅ Only after attaching observers
 }
 
 
