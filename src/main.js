@@ -515,6 +515,8 @@ sections.forEach(section => sectionObserver.observe(section));
     ]; // skillsData array here
 
     let skillsSwiperInstance;
+    let hasAnimatedSkills = false;
+
 
 function createSkillCard(skill) {
   const skillCard = document.createElement("div");
@@ -650,50 +652,57 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
+  if (hasAnimatedSkills) return; // 🛑 Prevent retriggering
+  hasAnimatedSkills = true; // ✅ Set flag to true
 
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-            }
+  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-10");
+          entry.target.classList.add("opacity-100", "translate-y-0");
 
-            observer.unobserve(entry.target); // Avoid retriggers
+          const bar = entry.target.querySelector(".proficiency-bar");
+          if (bar) {
+            bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
-        });
-      }, { threshold: 0.2 });
 
-      observer.observe(card);
-    });
-  }
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    observer.observe(card);
+  });
+}
+
 
     function animateOnScrollOnce() {
-      document.querySelectorAll(".proficiency-count strong").forEach(el => {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              let count = 0;
-              const target = parseInt(entry.target.dataset.count, 10);
-              const interval = setInterval(() => {
-                if (count < target) {
-                  count++;
-                  entry.target.textContent = count + "%";
-                } else {
-                  clearInterval(interval);
-                }
-              }, 15);
-              observer.unobserve(entry.target); // Important
-            }
-          });
-        }, { threshold: 0.5 });
+  if (hasAnimatedSkills) return;
 
-        observer.observe(el);
+  document.querySelectorAll(".proficiency-count strong").forEach(el => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          let count = 0;
+          const target = parseInt(entry.target.dataset.count, 10);
+          const interval = setInterval(() => {
+            if (count < target) {
+              count++;
+              entry.target.textContent = count + "%";
+            } else {
+              clearInterval(interval);
+            }
+          }, 15);
+          observer.unobserve(entry.target);
+        }
       });
-    }
+    }, { threshold: 0.5 });
+
+    observer.observe(el);
+  });
+}
+
 
   // Initial render
   renderSkills(); 
