@@ -516,58 +516,57 @@ sections.forEach(section => sectionObserver.observe(section));
 
     let skillsSwiperInstance;
 
-  function createSkillCard(skill) {
-    const skillCard = document.createElement("div");
+function createSkillCard(skill) {
+  const skillCard = document.createElement("div");
+  skillCard.className =
+    "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
 
-    // Only apply animation classes if not animated before
-    skillCard.className =
-  "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-opacity transition-transform duration-700 ease-in-out will-change-transform";
-    if (!skill.animated) {
-      skillCard.classList.add("opacity-0", "translate-y-10");
-      skill.animated = true; // Mark as animated to prevent future triggers
-    }
-
-    skillCard.style.flex = "1 1 calc(50% - 0.5rem)";
+    skillCard.style.flex = "1 1 calc(50% - 0.5rem)"; // 50% width minus gap
     skillCard.style.display = "flex";
     skillCard.style.flexDirection = "column";
 
-    // === Conditional Layout for "Mavis Beacon Teaches Typing"
-    const nameSection =
-      skill.name === "Mavis Beacon Teaches Typing"
-        ? `
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2">
-              <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-              <span class="text-sm font-medium">Mavis Beacon</span>
-            </div>
-            <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
-          </div>
-        `
-        : `
-          <div class="flex items-center gap-3">
-            <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-            <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
-          </div>
-        `;
+    // Conditional layout for "Mavis Beacon Teaches Typing"
+  let nameSection = "";
 
-    // === Full Card Markup
-    skillCard.innerHTML = `
-      ${nameSection}
-      <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
-      <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
-        <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
-      </div>
-      <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
-        <span><strong>${skill.years}</strong> years</span>
-        <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
-        <span class="proficiency-count">
-          <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
-        </span>
+  if (skill.name === "Mavis Beacon Teaches Typing") {
+    nameSection = `
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+          <span class="text-sm font-medium">Mavis Beacon</span>
+        </div>
+        <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
       </div>
     `;
-
-    return skillCard;
+  } else {
+    nameSection = `
+      <div class="flex items-center gap-3">
+        <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+        <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
+      </div>
+    `;
   }
+
+  skillCard.innerHTML = `
+    <div class="flex items-center gap-3">
+      <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+      <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
+    </div>
+    <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
+    <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
+      <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
+    </div>
+    <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
+      <span><strong>${skill.years}</strong> years</span>
+      <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
+      <span class="proficiency-count">
+        <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
+      </span>
+    </div>
+  `;
+
+  return skillCard;
+}
 
 function renderSkills(category = "all") {
   const filtered = category === "all"
@@ -604,16 +603,14 @@ function renderSkills(category = "all") {
     // Initialize Swiper
     if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
     skillsSwiperInstance = new Swiper(".skillsSwiper", {
-    slidesPerView: 1,
-    spaceBetween: 24,
-    autoHeight: true, // already set ✅
-    observer: true, // 🆕
-    observeParents: true, // 🆕
-    pagination: {
-      el: ".skills-swiper-pagination",
-      clickable: true,
-    },
-  });
+      slidesPerView: 1,
+      spaceBetween: 24,
+      autoHeight: true,
+      pagination: {
+        el: ".skills-swiper-pagination",
+        clickable: true,
+      },
+    });
 
   } else {
     // Desktop View: Show grid
@@ -653,97 +650,87 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.dataset.animated) {
-          entry.target.classList.remove("invisible", "translate-y-10");
-          entry.target.classList.add("visible", "translate-y-0");
-
-          const bar = entry.target.querySelector(".proficiency-bar");
-          if (bar) {
-            bar.style.width = bar.getAttribute("data-percentage") + "%";
-          }
-
-          entry.target.dataset.animated = "true";
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    observer.observe(card);
-  });
-}
-
-
-      function animateOnScrollOnce() {
-    document.querySelectorAll(".proficiency-count strong").forEach(el => {
+    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && entry.target.dataset.counted !== "true") {
-            let count = 0;
-            const target = parseInt(entry.target.dataset.count, 10);
-            const interval = setInterval(() => {
-              if (count < target) {
-                count++;
-                entry.target.textContent = count + "%";
-              } else {
-                clearInterval(interval);
-              }
-            }, 15);
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+            entry.target.classList.add("opacity-100", "translate-y-0");
 
-            entry.target.dataset.counted = "true"; // ✅ Mark as counted
-            observer.unobserve(entry.target);
+            const bar = entry.target.querySelector(".proficiency-bar");
+            if (bar) {
+              bar.style.width = bar.getAttribute("data-percentage") + "%";
+            }
+
+            observer.unobserve(entry.target); // Avoid retriggers
           }
         });
-      }, { threshold: 0.5 });
+      }, { threshold: 0.2 });
 
-      observer.observe(el);
+      observer.observe(card);
     });
   }
+
+    function animateOnScrollOnce() {
+      document.querySelectorAll(".proficiency-count strong").forEach(el => {
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              let count = 0;
+              const target = parseInt(entry.target.dataset.count, 10);
+              const interval = setInterval(() => {
+                if (count < target) {
+                  count++;
+                  entry.target.textContent = count + "%";
+                } else {
+                  clearInterval(interval);
+                }
+              }, 15);
+              observer.unobserve(entry.target); // Important
+            }
+          });
+        }, { threshold: 0.5 });
+
+        observer.observe(el);
+      });
+    }
 
   // Initial render
   renderSkills(); 
 
   // Skill filter logic
-  // Skill filter logic
-document.querySelectorAll(".skill-filter").forEach(btn => {
-  btn.addEventListener("click", () => {
-    // Remove active class from all buttons
-    document.querySelectorAll(".skill-filter").forEach(b =>
-      b.classList.remove("active", "bg-indigo-600", "text-white")
-    );
+  document.querySelectorAll(".skill-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Remove active class from all buttons
+      document.querySelectorAll(".skill-filter").forEach(b =>
+        b.classList.remove("active", "bg-indigo-600", "text-white")
+      );
 
-    // Add active class to clicked button
-    btn.classList.add("active", "bg-indigo-600", "text-white");
+      // Add active class to clicked button
+      btn.classList.add("active", "bg-indigo-600", "text-white");
 
-    const skillsGrid = document.getElementById("skillsGrid");
-    const skillsContainer = document.getElementById("skills");
+      // Lock in current height of the skills grid to prevent layout jump
+      const skillsGrid = document.getElementById("skillsGrid");
+      const previousHeight = skillsGrid.offsetHeight;
+      skillsGrid.style.minHeight = previousHeight + "px";
 
-    const previousHeight = skillsGrid.offsetHeight;
-    skillsGrid.style.minHeight = previousHeight + "px";
+      // Re-render filtered skills
+      const selectedCategory = btn.getAttribute("data-category");
+      renderSkills(selectedCategory);
 
-    // ✅ Disable transitions temporarily
-    skillsContainer.classList.add("transition-none");
+      // Scroll back to Skills section (tablet & desktop only)
+      const skillsSection = document.getElementById("skills");
+      if (skillsSection && window.innerWidth >= 768) {
+        skillsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
 
-    // Re-render filtered skills
-    const selectedCategory = btn.getAttribute("data-category");
-    renderSkills(selectedCategory);
-
-    // ✅ Re-enable transitions shortly after render
-    setTimeout(() => {
-      skillsGrid.style.minHeight = "auto";
-      skillsContainer.classList.remove("transition-none");
-      if (window.AOS) AOS.refresh(); // Recalculate AOS if needed
-    }, 600); // Matches transition duration
-
-    // ✅ Scroll to section (desktop/tablet only)
-    if (skillsContainer && window.innerWidth >= 768) {
-      skillsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+      // Clear minHeight after render + transition
+      setTimeout(() => {
+        skillsGrid.style.minHeight = "auto";
+        if (window.AOS) AOS.refresh(); // Optional: re-trigger AOS animations
+      }, 600); // Should match transition duration
+    });
   });
-});
-
 
     // Scroll to Top Button
     const scrollBtn = document.getElementById("scrollToTopBtn");
