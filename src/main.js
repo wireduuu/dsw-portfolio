@@ -521,7 +521,7 @@ sections.forEach(section => sectionObserver.observe(section));
 
     // Only apply animation classes if not animated before
     skillCard.className =
-      "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md transition-all duration-700 ease-out";
+  "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-opacity transition-transform duration-700 ease-in-out will-change-transform";
     if (!skill.animated) {
       skillCard.classList.add("opacity-0", "translate-y-10");
       skill.animated = true; // Mark as animated to prevent future triggers
@@ -604,14 +604,16 @@ function renderSkills(category = "all") {
     // Initialize Swiper
     if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
     skillsSwiperInstance = new Swiper(".skillsSwiper", {
-      slidesPerView: 1,
-      spaceBetween: 24,
-      autoHeight: true,
-      pagination: {
-        el: ".skills-swiper-pagination",
-        clickable: true,
-      },
-    });
+    slidesPerView: 1,
+    spaceBetween: 24,
+    autoHeight: true, // already set ✅
+    observer: true, // 🆕
+    observeParents: true, // 🆕
+    pagination: {
+      el: ".skills-swiper-pagination",
+      clickable: true,
+    },
+  });
 
   } else {
     // Desktop View: Show grid
@@ -703,38 +705,44 @@ window.addEventListener("resize", () => {
   renderSkills(); 
 
   // Skill filter logic
-  document.querySelectorAll(".skill-filter").forEach(btn => {
-    btn.addEventListener("click", () => {
-      // Remove active class from all buttons
-      document.querySelectorAll(".skill-filter").forEach(b =>
-        b.classList.remove("active", "bg-indigo-600", "text-white")
-      );
+  // Skill filter logic
+document.querySelectorAll(".skill-filter").forEach(btn => {
+  btn.addEventListener("click", () => {
+    // Remove active class from all buttons
+    document.querySelectorAll(".skill-filter").forEach(b =>
+      b.classList.remove("active", "bg-indigo-600", "text-white")
+    );
 
-      // Add active class to clicked button
-      btn.classList.add("active", "bg-indigo-600", "text-white");
+    // Add active class to clicked button
+    btn.classList.add("active", "bg-indigo-600", "text-white");
 
-      // Lock in current height of the skills grid to prevent layout jump
-      const skillsGrid = document.getElementById("skillsGrid");
-      const previousHeight = skillsGrid.offsetHeight;
-      skillsGrid.style.minHeight = previousHeight + "px";
+    const skillsGrid = document.getElementById("skillsGrid");
+    const skillsContainer = document.getElementById("skills");
 
-      // Re-render filtered skills
-      const selectedCategory = btn.getAttribute("data-category");
-      renderSkills(selectedCategory);
+    const previousHeight = skillsGrid.offsetHeight;
+    skillsGrid.style.minHeight = previousHeight + "px";
 
-      // Scroll back to Skills section (tablet & desktop only)
-      const skillsSection = document.getElementById("skills");
-      if (skillsSection && window.innerWidth >= 768) {
-        skillsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+    // ✅ Disable transitions temporarily
+    skillsContainer.classList.add("transition-none");
 
-      // Clear minHeight after render + transition
-      setTimeout(() => {
-        skillsGrid.style.minHeight = "auto";
-        if (window.AOS) AOS.refresh(); // Optional: re-trigger AOS animations
-      }, 600); // Should match transition duration
-    });
+    // Re-render filtered skills
+    const selectedCategory = btn.getAttribute("data-category");
+    renderSkills(selectedCategory);
+
+    // ✅ Re-enable transitions shortly after render
+    setTimeout(() => {
+      skillsGrid.style.minHeight = "auto";
+      skillsContainer.classList.remove("transition-none");
+      if (window.AOS) AOS.refresh(); // Recalculate AOS if needed
+    }, 600); // Matches transition duration
+
+    // ✅ Scroll to section (desktop/tablet only)
+    if (skillsContainer && window.innerWidth >= 768) {
+      skillsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   });
+});
+
 
     // Scroll to Top Button
     const scrollBtn = document.getElementById("scrollToTopBtn");

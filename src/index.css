@@ -373,3 +373,8 @@ nav a.active {
 .dark .proficiency-text {
   color: #f97316; /* Tailwind orange-400 for dark mode */
 }
+
+.transition-none * {
+  transition: none !important;
+}
+
