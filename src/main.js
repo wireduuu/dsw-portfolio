@@ -3,6 +3,10 @@ import Swiper from "swiper/bundle";
 import "swiper/css/bundle";
 
 document.addEventListener("DOMContentLoaded", () => {
+
+let hasAnimatedBars = false;
+  let hasCountedPercentages = false;
+
  // === TOGGLE MOBILE NAV ===
 const menuToggle = document.getElementById('menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -514,164 +518,212 @@ sections.forEach(section => sectionObserver.observe(section));
         },
     ]; // skillsData array here
 
-    let skillsSwiperInstance;
+    
+  let skillsSwiperInstance = null;
+  let currentCategory = "all";
 
-function createSkillCard(skill) {
-  const skillCard = document.createElement("div");
-  skillCard.className =
-    "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md";
+  function createSkillCard(skill) {
+    const skillCard = document.createElement("div");
+    skillCard.className =
+      "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
 
-    skillCard.style.flex = "1 1 calc(50% - 0.5rem)"; // 50% width minus gap
+    skillCard.style.flex = "1 1 calc(50% - 0.5rem)";
     skillCard.style.display = "flex";
     skillCard.style.flexDirection = "column";
 
     // Conditional layout for "Mavis Beacon Teaches Typing"
-  let nameSection = "";
-
-  if (skill.name === "Mavis Beacon Teaches Typing") {
-    nameSection = `
-      <div class="flex flex-col">
-        <div class="flex items-center gap-2">
-          <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-          <span class="text-sm font-medium">Mavis Beacon</span>
+    let nameSection = "";
+    if (skill.name === "Mavis Beacon Teaches Typing") {
+      nameSection = `
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+            <span class="text-sm font-medium">Mavis Beacon</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
         </div>
-        <h3 class="text-lg md:text-xl font-semibold break-words mt-1 ml-8">Teaches Typing</h3>
-      </div>
-    `;
-  } else {
-    nameSection = `
-      <div class="flex items-center gap-3">
-        <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-        <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
-      </div>
-    `;
-  }
-
-  skillCard.innerHTML = `
-    <div class="flex items-center gap-3">
-      <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
-      <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
-    </div>
-    <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
-    <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
-      <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
-    </div>
-    <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
-      <span><strong>${skill.years}</strong> years</span>
-      <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
-      <span class="proficiency-count">
-        <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
-      </span>
-    </div>
-  `;
-
-  return skillCard;
-}
-
-function renderSkills(category = "all") {
-  const filtered = category === "all"
-    ? skillsData
-    : skillsData.filter(skill => skill.category === category);
-
-  const skillsGrid = document.getElementById("skillsGrid");
-  const swiperWrapper = document.getElementById("skillsSwiperWrapper");
-  const swiperContainer = document.querySelector(".skillsSwiper");
-  const pagination = document.querySelector(".skills-swiper-pagination");
-
-  const isMobile = window.innerWidth < 768;
-
-  // Reset containers
-  skillsGrid.innerHTML = "";
-  swiperWrapper.innerHTML = "";
-
-  if (isMobile) {
-    // ✅ Mobile View: Show swiper
-    skillsGrid.classList.add("hidden");
-    swiperContainer?.classList.remove("hidden");
-    pagination?.classList.remove("hidden");
-
-    // Build Swiper slides (2x2 layout: 4 per slide)
-    for (let i = 0; i < filtered.length; i += 4) {
-      const slide = document.createElement("div");
-      slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
-      filtered.slice(i, i + 4).forEach(skill => {
-        slide.appendChild(createSkillCard(skill));
-      });
-      swiperWrapper.appendChild(slide);
+      `;
+    } else {
+      nameSection = `
+        <div class="flex items-center gap-3">
+          <i class="${skill.icon} text-2xl text-indigo-600 dark:text-indigo-400"></i>
+          <h3 class="text-lg md:text-xl font-semibold break-words">${skill.name}</h3>
+        </div>
+      `;
     }
 
-    // Initialize Swiper
-    if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
-    skillsSwiperInstance = new Swiper(".skillsSwiper", {
-      slidesPerView: 1,
-      spaceBetween: 24,
-      autoHeight: true,
-      pagination: {
-        el: ".skills-swiper-pagination",
-        clickable: true,
-      },
-    });
+    skillCard.innerHTML = `
+      ${nameSection}
+      <p class="text-gray-600 dark:text-gray-300 text-sm">${skill.description}</p>
+      <div class="w-full bg-gray-300 dark:bg-gray-700 h-2 rounded overflow-hidden">
+        <div class="proficiency-bar h-2 rounded bg-indigo-500" style="width: 0%" data-percentage="${skill.proficiency}"></div>
+      </div>
+      <div class="flex flex-col md:flex-row md:justify-between text-sm text-gray-600 dark:text-gray-400 gap-2 md:gap-0 text-center md:text-left">
+        <span><strong>${skill.years}</strong> years</span>
+        <span><strong>${skill.projects >= 10 ? "10+" : skill.projects}</strong> projects</span>
+        <span class="proficiency-count">
+          <strong class="proficiency-text text-indigo-600" data-count="${skill.proficiency}">0%</strong> proficiency
+        </span>
+      </div>
+    `;
 
-  } else {
-    // Desktop View: Show grid
-    swiperContainer?.classList.add("hidden");
-    pagination?.classList.add("hidden");
-    skillsGrid.classList.remove("hidden");
-
-    // Destroy Swiper and clean state
-    if (skillsSwiperInstance) {
-      skillsSwiperInstance.destroy(true, true);
-      skillsSwiperInstance = null;
-      swiperContainer?.classList.remove("swiper-initialized", "swiper-backface-hidden");
-      pagination.innerHTML = "";
-    }
-
-    // Render cards in grid
-    filtered.forEach(skill => {
-      skillsGrid.appendChild(createSkillCard(skill));
-    });
+    return skillCard;
   }
 
-  // Trigger animations once
-  requestAnimationFrame(() => {
-    triggerAnimationsOnce();
-    animateOnScrollOnce();
-  });
-}
+  function renderSkills(category = "all") {
+    const filtered = category === "all" ? skillsData : skillsData.filter(skill => skill.category === category);
+    const isMobile = window.innerWidth < 768;
+    const wasMobile = skillsGrid.classList.contains("hidden");
 
-let resizeTimer;
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    const activeCategory = document.querySelector(".skill-filter.active")?.dataset.category || "all";
-    renderSkills(activeCategory);
-  }, 300);
-});
+    if (isMobile !== wasMobile) {
+      skillsGrid.innerHTML = "";
+      swiperWrapper.innerHTML = "";
 
+      if (isMobile) {
+        // Build Swiper slides
+        for (let i = 0; i < filtered.length; i += 4) {
+          const slide = document.createElement("div");
+          slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
+          filtered.slice(i, i + 4).forEach(skill => {
+            slide.appendChild(createSkillCard(skill));
+          });
+          swiperWrapper.appendChild(slide);
+        }
+
+        if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+        skillsSwiperInstance = new Swiper(".skillsSwiper", {
+          slidesPerView: 1,
+          spaceBetween: 24,
+          autoHeight: true,
+          pagination: {
+            el: ".skills-swiper-pagination",
+            clickable: true,
+          },
+        });
+      } else {
+        // Desktop view
+        filtered.forEach(skill => {
+          skillsGrid.appendChild(createSkillCard(skill));
+        });
+
+        if (skillsSwiperInstance) {
+          skillsSwiperInstance.destroy(true, true);
+          skillsSwiperInstance = null;
+        }
+      }
+    } else {
+      if (isMobile) {
+        while (swiperWrapper.children.length > 0) {
+          swiperWrapper.removeChild(swiperWrapper.lastChild);
+        }
+        for (let i = 0; i < filtered.length; i += 4) {
+          const slide = document.createElement("div");
+          slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
+          filtered.slice(i, i + 4).forEach(skill => {
+            slide.appendChild(createSkillCard(skill));
+          });
+          swiperWrapper.appendChild(slide);
+        }
+        if (skillsSwiperInstance) skillsSwiperInstance.update();
+      } else {
+        skillsGrid.innerHTML = "";
+        filtered.forEach(skill => {
+          skillsGrid.appendChild(createSkillCard(skill));
+        });
+      }
+    }
+
+    requestAnimationFrame(() => {
+      triggerAnimationsOnce();
+      animateOnScrollOnce();
+    });
+  }
 
   function triggerAnimationsOnce() {
-  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-    card.classList.remove("opacity-0", "translate-y-10");
-    card.classList.add("opacity-100", "translate-y-0");
+    if (hasAnimatedBars) return;
 
-    const bar = card.querySelector(".proficiency-bar");
-    if (bar) {
-      bar.style.width = bar.getAttribute("data-percentage") + "%"; // Just set instantly
-    }
+    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      if (card.hasAttribute("data-animated")) return;
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+            entry.target.classList.add("opacity-100", "translate-y-0");
+            entry.target.setAttribute("data-animated", "true");
+
+            const bar = entry.target.querySelector(".proficiency-bar");
+            if (bar && !bar.classList.contains("animated")) {
+              bar.style.width = bar.getAttribute("data-percentage") + "%";
+              bar.classList.add("animated");
+            }
+
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      observer.observe(card);
+    });
+
+    hasAnimatedBars = true;
+  }
+
+  function animateOnScrollOnce() {
+    if (hasCountedPercentages) return;
+
+    document.querySelectorAll(".proficiency-count strong").forEach(el => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            let count = 0;
+            const target = parseInt(entry.target.dataset.count, 10);
+            const interval = setInterval(() => {
+              if (count < target) {
+                count++;
+                entry.target.textContent = count + "%";
+              } else {
+                clearInterval(interval);
+              }
+            }, 15);
+
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(el);
+    });
+
+    hasCountedPercentages = true;
+  }
+
+  function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  window.addEventListener("resize", debounce(() => {
+    renderSkills(currentCategory);
+  }, 300));
+
+  document.querySelectorAll(".skill-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".skill-filter").forEach(b =>
+        b.classList.remove("active", "bg-indigo-600", "text-white")
+      );
+      btn.classList.add("active", "bg-indigo-600", "text-white");
+
+      currentCategory = btn.getAttribute("data-category");
+      renderSkills(currentCategory);
+    });
   });
-}
-
-
-
-function animateOnScrollOnce() {
-  document.querySelectorAll(".proficiency-count strong").forEach(el => {
-    el.textContent = el.dataset.count + "%"; // Instantly show target value
-  });
-}
-
 
   // Initial render
-  renderSkills(); 
+  renderSkills();
 
   // Skill filter logic
   document.querySelectorAll(".skill-filter").forEach(btn => {
