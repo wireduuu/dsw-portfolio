@@ -143,9 +143,6 @@ sections.forEach(section => sectionObserver.observe(section));
   const isDarkTheme = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
   applyTheme(isDarkTheme);
 
-  // === AOS ANIMATION ===
-  AOS.init({ duration: 1000 });
-
   const updateThemeUI = (isDark) => {
     const themeIcon = document.getElementById("theme-icon");
     const themeLabel = document.getElementById("theme-label");
@@ -379,150 +376,147 @@ sections.forEach(section => sectionObserver.observe(section));
   }
 
   // === SKILLS SECTION ===
+  const skillsGrid = document.getElementById("skillsGrid");
+  const swiperWrapper = document.getElementById("skillsSwiperWrapper");
+  const swiperContainer = document.querySelector(".skillsSwiper");
+  const pagination = document.querySelector(".skills-swiper-pagination");
+
   const skillsData = [
     {
-          name: "HTML",
-          icon: "fab fa-html5",
-          category: "frontend",
-          description: "Markup language for structuring web content.",
-          years: 2,
-          projects: 10,
-          proficiency: 90,
-        },
-        {
-          name: "CSS",
-          icon: "fab fa-css3-alt",
-          category: "frontend",
-          description: "Styling language for enhancing web content layout.",
-          years: 2,
-          projects: 10,
-          proficiency: 90,
-        },
-        {
-          name: "Tailwind CSS",
-          icon: "fas fa-wind",
-          category: "frontend",
-          description: "Utility-first CSS framework for building modern UIs.",
-          years: 1,
-          projects: 2,
-          proficiency: 75,
-        },
-        {
-          name: "Bootstrap CSS",
-          icon: "fab fa-bootstrap",
-          category: "frontend",
-          description:
-            "CSS framework for responsive and mobile-first web development.",
-          years: 2,
-          projects: 7,
-          proficiency: 80,
-        },
-        {
-          name: "JavaScript",
-          icon: "fab fa-js",
-          category: "frontend",
-          description: "Programming language for interactive web development.",
-          years: 1,
-          projects: 7,
-          proficiency: 80,
-        },
-        {
-          name: "PHP",
-          icon: "fab fa-php",
-          category: "backend",
-          description: "Server-side scripting language for web development.",
-          years: 2,
-          projects: 6,
-          proficiency: 80,
-        },
-        {
-          name: "MySQL",
-          icon: "fas fa-database",
-          category: "backend",
-          description:
-            "Relational database system for storing structured data.",
-          years: 2,
-          projects: 6,
-          proficiency: 85,
-        },
-        {
-          name: "MongoDB",
-          icon: "fas fa-leaf",
-          category: "backend",
-          description: "NoSQL database for scalable applications.",
-          years: 1,
-          projects: 2,
-          proficiency: 70,
-        },
-        {
-          name: "Python",
-          icon: "fab fa-python",
-          category: "backend",
-          description:
-            "General-purpose programming language with backend capabilities.",
-          years: 2,
-          projects: 6,
-          proficiency: 70,
-        },
-        {
-          name: "Java",
-          icon: "fab fa-java",
-          category: "backend",
-          description:
-            "Object-oriented programming language used in backend development.",
-          years: 1,
-          projects: 2,
-          proficiency: 75,
-        },
-        {
-          name: "Figma",
-          icon: "fab fa-figma",
-          category: "design",
-          description:
-            "UI/UX design tool for interface prototyping and wireframing.",
-          years: 1,
-          projects: 10,
-          proficiency: 85,
-        },
-        {
-          name: "Adobe Photoshop",
-          icon: "fas fa-paint-brush",
-          category: "design",
-          description:
-            "Industry-standard graphic design tool for image editing.",
-          years: 3,
-          projects: 10,
-          proficiency: 85,
-        },
-        {
-          name: "Git & GitHub",
-          icon: "fab fa-github",
-          category: "backend",
-          description: "Version control and code collaboration platform.",
-          years: 2,
-          projects: 5,
-          proficiency: 85,
-        },
-        {
-          name: "Mavis Beacon Teaches Typing",
-          icon: "fas fa-keyboard",
-          category: "tools",
-          description:
-            "Typing instruction software that improves speed and accuracy.",
-          years: 5,
-          projects: 0,
-          proficiency: 95,
-        }, // Add remaining skills here (preserved from original)
+      name: "HTML",
+      icon: "fab fa-html5",
+      category: "frontend",
+      description: "Markup language for structuring web content.",
+      years: 2,
+      projects: 10,
+      proficiency: 90,
+    },
+    {
+      name: "CSS",
+      icon: "fab fa-css3-alt",
+      category: "frontend",
+      description: "Styling language for enhancing web content layout.",
+      years: 2,
+      projects: 10,
+      proficiency: 90,
+    },
+    {
+      name: "Tailwind CSS",
+      icon: "fas fa-wind",
+      category: "frontend",
+      description: "Utility-first CSS framework for building modern UIs.",
+      years: 1,
+      projects: 2,
+      proficiency: 75,
+    },
+    {
+      name: "Bootstrap CSS",
+      icon: "fab fa-bootstrap",
+      category: "frontend",
+      description: "CSS framework for responsive and mobile-first web development.",
+      years: 2,
+      projects: 7,
+      proficiency: 80,
+    },
+    {
+      name: "JavaScript",
+      icon: "fab fa-js",
+      category: "frontend",
+      description: "Programming language for interactive web development.",
+      years: 1,
+      projects: 7,
+      proficiency: 80,
+    },
+    {
+      name: "PHP",
+      icon: "fab fa-php",
+      category: "backend",
+      description: "Server-side scripting language for web development.",
+      years: 2,
+      projects: 6,
+      proficiency: 80,
+    },
+    {
+      name: "MySQL",
+      icon: "fas fa-database",
+      category: "backend",
+      description: "Relational database system for storing structured data.",
+      years: 2,
+      projects: 6,
+      proficiency: 85,
+    },
+    {
+      name: "MongoDB",
+      icon: "fas fa-leaf",
+      category: "backend",
+      description: "NoSQL database for scalable applications.",
+      years: 1,
+      projects: 2,
+      proficiency: 70,
+    },
+    {
+      name: "Python",
+      icon: "fab fa-python",
+      category: "backend",
+      description: "General-purpose programming language with backend capabilities.",
+      years: 2,
+      projects: 6,
+      proficiency: 70,
+    },
+    {
+      name: "Java",
+      icon: "fab fa-java",
+      category: "backend",
+      description: "Object-oriented programming language used in backend development.",
+      years: 1,
+      projects: 2,
+      proficiency: 75,
+    },
+    {
+      name: "Figma",
+      icon: "fab fa-figma",
+      category: "design",
+      description: "UI/UX design tool for interface prototyping and wireframing.",
+      years: 1,
+      projects: 10,
+      proficiency: 85,
+    },
+    {
+      name: "Adobe Photoshop",
+      icon: "fas fa-paint-brush",
+      category: "design",
+      description: "Industry-standard graphic design tool for image editing.",
+      years: 3,
+      projects: 10,
+      proficiency: 85,
+    },
+    {
+      name: "Git & GitHub",
+      icon: "fab fa-github",
+      category: "backend",
+      description: "Version control and code collaboration platform.",
+      years: 2,
+      projects: 5,
+      proficiency: 85,
+    },
+    {
+      name: "Mavis Beacon Teaches Typing",
+      icon: "fas fa-keyboard",
+      category: "tools",
+      description: "Typing instruction software that improves speed and accuracy.",
+      years: 5,
+      projects: 0,
+      proficiency: 95,
+    },
   ];
-    
 
-  let skillsSwiperInstance;
+  let skillsSwiperInstance = null;
 
   function createSkillCard(skill) {
     const skillCard = document.createElement("div");
-    skillCard.className =
-      "skill-card flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out min-h-[150px]"; // Added min-h to prevent collapse
-
+    skillCard.className = "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
+    
+    // Special handling for "Mavis Beacon Teaches Typing"
     let nameSection = "";
     if (skill.name === "Mavis Beacon Teaches Typing") {
       nameSection = `
@@ -562,148 +556,156 @@ sections.forEach(section => sectionObserver.observe(section));
   }
 
   function renderSkills(category = "all") {
-    const filtered = category === "all" ? skillsData : skillsData.filter(skill => skill.category === category);
-    const skillsGrid = document.getElementById("skillsGrid");
-    const swiperWrapper = document.getElementById("skillsSwiperWrapper");
-    const swiperContainer = document.querySelector(".skillsSwiper");
-    const pagination = document.querySelector(".skills-swiper-pagination");
+    const filtered = category === "all" 
+      ? skillsData 
+      : skillsData.filter(skill => skill.category === category);
+
     const isMobile = window.innerWidth < 768;
 
-    // Reset containers
-    skillsGrid.innerHTML = "";
-    swiperWrapper.innerHTML = "";
-
-    // Reset animation flags for new cards
-    hasAnimatedBars = false;
-    hasCountedPercentages = false;
+    // Clear containers
+    if (skillsGrid) skillsGrid.innerHTML = "";
+    if (swiperWrapper) swiperWrapper.innerHTML = "";
 
     if (isMobile) {
-      skillsGrid.classList.add("hidden");
-      swiperContainer?.classList.remove("hidden");
-      pagination?.classList.remove("hidden");
+      // Mobile View: Show swiper, hide grid
+      if (skillsGrid) skillsGrid.classList.add("hidden");
+      if (swiperContainer) swiperContainer.classList.remove("hidden");
+      if (pagination) pagination.classList.remove("hidden");
 
-      // Build Swiper slides (2 columns per slide)
-      for (let i = 0; i < filtered.length; i += 2) { // 2 cards per slide (mobile grid)
+      // Build Swiper slides (2x2 layout: 4 cards per slide)
+      for (let i = 0; i < filtered.length; i += 4) {
         const slide = document.createElement("div");
-        slide.className = "swiper-slide grid grid-cols-1 md:grid-cols-2 gap-4 px-2 pb-6"; // Fixed grid for mobile
-        filtered.slice(i, i + 2).forEach(skill => {
-          slide.appendChild(createSkillCard(skill));
+        slide.className = "swiper-slide";
+        
+        const slideGrid = document.createElement("div");
+        slideGrid.className = "grid grid-cols-2 gap-4 px-2 pb-6";
+        
+        filtered.slice(i, i + 4).forEach(skill => {
+          slideGrid.appendChild(createSkillCard(skill));
         });
+        
+        slide.appendChild(slideGrid);
         swiperWrapper.appendChild(slide);
       }
 
-      // Reinitialize Swiper with fade effect
-      if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+      // Initialize or update Swiper
+      if (skillsSwiperInstance) {
+        skillsSwiperInstance.destroy(true, true);
+      }
+      
       skillsSwiperInstance = new Swiper(".skillsSwiper", {
         slidesPerView: 1,
         spaceBetween: 24,
         autoHeight: true,
-        pagination: { el: ".skills-swiper-pagination", clickable: true },
-        effect: "fade",
-        fadeEffect: { crossFade: true },
+        pagination: {
+          el: ".skills-swiper-pagination",
+          clickable: true,
+        },
       });
-    } else {
-      swiperContainer?.classList.add("hidden");
-      pagination?.classList.add("hidden");
-      skillsGrid?.classList.remove("hidden");
 
-      // Destroy Swiper for desktop
+    } else {
+      // Desktop View: Show grid, hide swiper
+      if (swiperContainer) swiperContainer.classList.add("hidden");
+      if (pagination) pagination.classList.add("hidden");
+      if (skillsGrid) skillsGrid.classList.remove("hidden");
+
+      // Destroy Swiper if exists
       if (skillsSwiperInstance) {
         skillsSwiperInstance.destroy(true, true);
         skillsSwiperInstance = null;
       }
 
-      // Render desktop grid (4 columns)
+      // Render cards in grid
       filtered.forEach(skill => {
-        skillsGrid?.appendChild(createSkillCard(skill));
+        skillsGrid.appendChild(createSkillCard(skill));
       });
     }
 
-    // Trigger animations after a short delay (ensures DOM is updated)
+    // Trigger animations after DOM updates
     setTimeout(() => {
-      triggerAnimationsOnce();
-      animateOnScrollOnce();
+      animateSkillCards();
     }, 100);
   }
 
-  function triggerAnimationsOnce() {
-    if (hasAnimatedBars) return;
-
-    document.querySelectorAll("#skillsGrid > .skill-card, .skillsSwiper .swiper-slide > .skill-card").forEach(card => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
-
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar && !bar.classList.contains("animated")) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-              bar.classList.add("animated");
+  function animateSkillCards() {
+    const cards = document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide div.bg-gray-100");
+    
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.remove("opacity-0", "translate-y-10");
+        card.classList.add("opacity-100", "translate-y-0");
+        
+        // Animate progress bar
+        const bar = card.querySelector(".proficiency-bar");
+        if (bar) {
+          const percentage = bar.getAttribute("data-percentage");
+          setTimeout(() => {
+            bar.style.width = percentage + "%";
+          }, 200);
+        }
+        
+        // Animate percentage counter
+        const counter = card.querySelector(".proficiency-text");
+        if (counter) {
+          const target = parseInt(counter.getAttribute("data-count"));
+          let current = 0;
+          const increment = target / 50;
+          const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+              current = target;
+              clearInterval(timer);
             }
-
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.01 }); // Lower threshold to trigger earlier
-
-      observer.observe(card);
+            counter.textContent = Math.round(current) + "%";
+          }, 20);
+        }
+      }, index * 50); // Stagger animations
     });
-
-    hasAnimatedBars = true;
-  }
-
-  function animateOnScrollOnce() {
-    if (hasCountedPercentages) return;
-
-    document.querySelectorAll(".proficiency-count strong").forEach(el => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            let count = 0;
-            const target = parseInt(entry.target.dataset.count, 10);
-            const interval = setInterval(() => {
-              if (count < target) {
-                count++;
-                entry.target.textContent = count + "%";
-              } else {
-                clearInterval(interval);
-              }
-            }, 15);
-
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.5 });
-
-      observer.observe(el);
-    });
-
-    hasCountedPercentages = true;
   }
 
   // Initial render
   renderSkills();
 
-  // Skill filter logic
+  // Filter button handlers
   document.querySelectorAll(".skill-filter").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".skill-filter").forEach(b => b.classList.remove("active", "bg-indigo-600", "text-white"));
+      // Update active state
+      document.querySelectorAll(".skill-filter").forEach(b => {
+        b.classList.remove("active", "bg-indigo-600", "text-white");
+        b.classList.add("bg-gray-200", "dark:bg-gray-700", "text-gray-700", "dark:text-gray-100");
+      });
+      
       btn.classList.add("active", "bg-indigo-600", "text-white");
-      const selectedCategory = btn.getAttribute("data-category");
-      renderSkills(selectedCategory);
+      btn.classList.remove("bg-gray-200", "dark:bg-gray-700", "text-gray-700", "dark:text-gray-100");
+      
+      // Render filtered skills
+      const category = btn.getAttribute("data-category");
+      renderSkills(category);
     });
   });
 
-  // Resize handling
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      const activeCategory = document.querySelector(".skill-filter.active")?.dataset.category || "all";
-      renderSkills(activeCategory);
-    }, 300);
-  });
+  // Debounced resize handler
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  window.addEventListener("resize", debounce(() => {
+    const activeCategory = document.querySelector(".skill-filter.active")?.getAttribute("data-category") || "all";
+    renderSkills(activeCategory);
+  }, 300));
+
+  // === AOS INITIALIZATION ===
+  if (typeof AOS !== 'undefined') {
+    AOS.INIT({ duratuion: 1000 });
+  }
 
 
     // Scroll to Top Button
