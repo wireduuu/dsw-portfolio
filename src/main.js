@@ -379,11 +379,8 @@ sections.forEach(section => sectionObserver.observe(section));
   }
 
   // === SKILLS SECTION ===
-  const skillsGrid = document.getElementById("skillsGrid");
-  const swiperWrapper = document.getElementById("skillsSwiperWrapper");
-
-    const skillsData = [
-        {
+  const skillsData = [
+    {
           name: "HTML",
           icon: "fab fa-html5",
           category: "frontend",
@@ -515,23 +512,17 @@ sections.forEach(section => sectionObserver.observe(section));
           years: 5,
           projects: 0,
           proficiency: 95,
-        },
-    ]; // skillsData array here
-
+        }, // Add remaining skills here (preserved from original)
+  ];
     
-  let skillsSwiperInstance = null;
-  let currentCategory = "all";
+
+  let skillsSwiperInstance;
 
   function createSkillCard(skill) {
     const skillCard = document.createElement("div");
     skillCard.className =
-      "flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out";
+      "skill-card flex flex-col gap-3 bg-gray-100 dark:bg-gray-800 p-5 rounded-lg shadow-md opacity-0 translate-y-10 transition-all duration-700 ease-out min-h-[150px]"; // Added min-h to prevent collapse
 
-    skillCard.style.flex = "1 1 calc(50% - 0.5rem)";
-    skillCard.style.display = "flex";
-    skillCard.style.flexDirection = "column";
-
-    // Conditional layout for "Mavis Beacon Teaches Typing"
     let nameSection = "";
     if (skill.name === "Mavis Beacon Teaches Typing") {
       nameSection = `
@@ -572,85 +563,78 @@ sections.forEach(section => sectionObserver.observe(section));
 
   function renderSkills(category = "all") {
     const filtered = category === "all" ? skillsData : skillsData.filter(skill => skill.category === category);
+    const skillsGrid = document.getElementById("skillsGrid");
+    const swiperWrapper = document.getElementById("skillsSwiperWrapper");
+    const swiperContainer = document.querySelector(".skillsSwiper");
+    const pagination = document.querySelector(".skills-swiper-pagination");
     const isMobile = window.innerWidth < 768;
-    const wasMobile = skillsGrid.classList.contains("hidden");
 
-    if (isMobile !== wasMobile) {
-      skillsGrid.innerHTML = "";
-      swiperWrapper.innerHTML = "";
+    // Reset containers
+    skillsGrid.innerHTML = "";
+    swiperWrapper.innerHTML = "";
 
-      if (isMobile) {
-        // Build Swiper slides
-        for (let i = 0; i < filtered.length; i += 4) {
-          const slide = document.createElement("div");
-          slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
-          filtered.slice(i, i + 4).forEach(skill => {
-            slide.appendChild(createSkillCard(skill));
-          });
-          swiperWrapper.appendChild(slide);
-        }
+    // Reset animation flags for new cards
+    hasAnimatedBars = false;
+    hasCountedPercentages = false;
 
-        if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
-        skillsSwiperInstance = new Swiper(".skillsSwiper", {
-          slidesPerView: 1,
-          spaceBetween: 24,
-          autoHeight: true,
-          pagination: {
-            el: ".skills-swiper-pagination",
-            clickable: true,
-          },
+    if (isMobile) {
+      skillsGrid.classList.add("hidden");
+      swiperContainer?.classList.remove("hidden");
+      pagination?.classList.remove("hidden");
+
+      // Build Swiper slides (2 columns per slide)
+      for (let i = 0; i < filtered.length; i += 2) { // 2 cards per slide (mobile grid)
+        const slide = document.createElement("div");
+        slide.className = "swiper-slide grid grid-cols-1 md:grid-cols-2 gap-4 px-2 pb-6"; // Fixed grid for mobile
+        filtered.slice(i, i + 2).forEach(skill => {
+          slide.appendChild(createSkillCard(skill));
         });
-      } else {
-        // Desktop view
-        filtered.forEach(skill => {
-          skillsGrid.appendChild(createSkillCard(skill));
-        });
-
-        if (skillsSwiperInstance) {
-          skillsSwiperInstance.destroy(true, true);
-          skillsSwiperInstance = null;
-        }
+        swiperWrapper.appendChild(slide);
       }
+
+      // Reinitialize Swiper with fade effect
+      if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+      skillsSwiperInstance = new Swiper(".skillsSwiper", {
+        slidesPerView: 1,
+        spaceBetween: 24,
+        autoHeight: true,
+        pagination: { el: ".skills-swiper-pagination", clickable: true },
+        effect: "fade",
+        fadeEffect: { crossFade: true },
+      });
     } else {
-      if (isMobile) {
-        while (swiperWrapper.children.length > 0) {
-          swiperWrapper.removeChild(swiperWrapper.lastChild);
-        }
-        for (let i = 0; i < filtered.length; i += 4) {
-          const slide = document.createElement("div");
-          slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
-          filtered.slice(i, i + 4).forEach(skill => {
-            slide.appendChild(createSkillCard(skill));
-          });
-          swiperWrapper.appendChild(slide);
-        }
-        if (skillsSwiperInstance) skillsSwiperInstance.update();
-      } else {
-        skillsGrid.innerHTML = "";
-        filtered.forEach(skill => {
-          skillsGrid.appendChild(createSkillCard(skill));
-        });
+      swiperContainer?.classList.add("hidden");
+      pagination?.classList.add("hidden");
+      skillsGrid?.classList.remove("hidden");
+
+      // Destroy Swiper for desktop
+      if (skillsSwiperInstance) {
+        skillsSwiperInstance.destroy(true, true);
+        skillsSwiperInstance = null;
       }
+
+      // Render desktop grid (4 columns)
+      filtered.forEach(skill => {
+        skillsGrid?.appendChild(createSkillCard(skill));
+      });
     }
 
-    requestAnimationFrame(() => {
+    // Trigger animations after a short delay (ensures DOM is updated)
+    setTimeout(() => {
       triggerAnimationsOnce();
       animateOnScrollOnce();
-    });
+    }, 100);
   }
 
   function triggerAnimationsOnce() {
     if (hasAnimatedBars) return;
 
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      if (card.hasAttribute("data-animated")) return;
-
+    document.querySelectorAll("#skillsGrid > .skill-card, .skillsSwiper .swiper-slide > .skill-card").forEach(card => {
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.remove("opacity-0", "translate-y-10");
             entry.target.classList.add("opacity-100", "translate-y-0");
-            entry.target.setAttribute("data-animated", "true");
 
             const bar = entry.target.querySelector(".proficiency-bar");
             if (bar && !bar.classList.contains("animated")) {
@@ -661,7 +645,7 @@ sections.forEach(section => sectionObserver.observe(section));
             observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.2 });
+      }, { threshold: 0.01 }); // Lower threshold to trigger earlier
 
       observer.observe(card);
     });
@@ -698,66 +682,29 @@ sections.forEach(section => sectionObserver.observe(section));
     hasCountedPercentages = true;
   }
 
-  function debounce(fn, delay) {
-    let timer;
-    return function(...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(this, args), delay);
-    };
-  }
-
-  window.addEventListener("resize", debounce(() => {
-    renderSkills(currentCategory);
-  }, 300));
-
-  document.querySelectorAll(".skill-filter").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".skill-filter").forEach(b =>
-        b.classList.remove("active", "bg-indigo-600", "text-white")
-      );
-      btn.classList.add("active", "bg-indigo-600", "text-white");
-
-      currentCategory = btn.getAttribute("data-category");
-      renderSkills(currentCategory);
-    });
-  });
-
   // Initial render
   renderSkills();
 
   // Skill filter logic
   document.querySelectorAll(".skill-filter").forEach(btn => {
     btn.addEventListener("click", () => {
-      // Remove active class from all buttons
-      document.querySelectorAll(".skill-filter").forEach(b =>
-        b.classList.remove("active", "bg-indigo-600", "text-white")
-      );
-
-      // Add active class to clicked button
+      document.querySelectorAll(".skill-filter").forEach(b => b.classList.remove("active", "bg-indigo-600", "text-white"));
       btn.classList.add("active", "bg-indigo-600", "text-white");
-
-      // Lock in current height of the skills grid to prevent layout jump
-      const skillsGrid = document.getElementById("skillsGrid");
-      const previousHeight = skillsGrid.offsetHeight;
-      skillsGrid.style.minHeight = previousHeight + "px";
-
-      // Re-render filtered skills
       const selectedCategory = btn.getAttribute("data-category");
       renderSkills(selectedCategory);
-
-      // Scroll back to Skills section (tablet & desktop only)
-      const skillsSection = document.getElementById("skills");
-      if (skillsSection && window.innerWidth >= 768) {
-        skillsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-
-      // Clear minHeight after render + transition
-      setTimeout(() => {
-        skillsGrid.style.minHeight = "auto";
-        if (window.AOS) AOS.refresh(); // Optional: re-trigger AOS animations
-      }, 600); // Should match transition duration
     });
   });
+
+  // Resize handling
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const activeCategory = document.querySelector(".skill-filter.active")?.dataset.category || "all";
+      renderSkills(activeCategory);
+    }, 300);
+  });
+
 
     // Scroll to Top Button
     const scrollBtn = document.getElementById("scrollToTopBtn");
