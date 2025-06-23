@@ -71,7 +71,7 @@ mobileMenuClose?.addEventListener('click', () => {
 });
 
 
-// Swipe to close
+// Swipe to close (optional)
 let touchStartX = 0;
 mobileMenu?.addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
@@ -108,29 +108,30 @@ mobileMenu?.addEventListener('touchmove', e => {
     });
   });
 
-  // Navbar Active Section Highlighting
-  const navLinks = document.querySelectorAll("nav a, .mobile-nav-link");
-  const sections = document.querySelectorAll("section[id]");
+   // Navbar Active Section Highlighting
+   // ✅ NEW: Improved section highlighting (especially for About/Resume)
+const navLinks = document.querySelectorAll("nav a, .mobile-nav-link");
+const sections = document.querySelectorAll("section[id]");
 
-  const sectionObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          const linkTarget = link.getAttribute("href")?.substring(1);
-          if (linkTarget === entry.target.id) {
-            link.classList.add("active");
-          } else {
-            link.classList.remove("active");
-          }
-        });
-      }
-    });
-  }, {
-    threshold: 0.1,
-    rootMargin: "-100px 0px -40% 0px" // Tweak this if needed
+const sectionObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        const linkTarget = link.getAttribute("href")?.substring(1);
+        if (linkTarget === entry.target.id) {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+    }
   });
+}, {
+  threshold: 0.1,
+  rootMargin: "-100px 0px -40% 0px" // Tweak this if needed
+});
 
-  sections.forEach(section => sectionObserver.observe(section));
+sections.forEach(section => sectionObserver.observe(section));
 
 
 

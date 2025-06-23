@@ -359,17 +359,17 @@ nav a.active {
 
 .proficiency-bar {
   transition: width 1.2s ease-in-out;
-  background-color: rgba(99, 102, 241, 1); /* light mode */
+  background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
 }
 
 .dark .proficiency-bar {
-  background-color: #f97316; /* dark mode */
+  background-color: #f97316; /* Tailwind orange-500 for dark mode */
 }
 
 .proficiency-text {
-  color: rgba(99, 102, 241, 1); /* light mode */
+  color: rgba(99, 102, 241, 1); /* indigo for light mode */
 }
 
 .dark .proficiency-text {
-  color: #f97316; /* dark mode */
+  color: #f97316; /* Tailwind orange-400 for dark mode */
 }
