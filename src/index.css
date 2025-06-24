@@ -185,6 +185,7 @@ nav a.active {
 .skillsSwiper {
   width: 100%;
   padding-bottom: 40px; /* Space for pagination */
+  min-height: 400px;
 }
 
 .skillsSwiper .swiper-slide {
@@ -235,6 +236,7 @@ nav a.active {
 /* Ensure cards maintain consistent height */
 .skillsSwiper .swiper-slide > div {
   height: 100%;
+  background: rgba(255, 0, 0, 0.05); /* subtle red background */
 }
 
 .swiper-slide {
