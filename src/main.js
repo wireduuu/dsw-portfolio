@@ -667,39 +667,21 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-    const cards = document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div");
+  console.log("🔥 Forcing skill card visibility now...");
 
-    cards.forEach(card => {
-      const reveal = () => {
-        card.classList.remove("opacity-0", "translate-y-10");
-        card.classList.add("opacity-100", "translate-y-0");
+  const cards = document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div");
 
-        const bar = card.querySelector(".proficiency-bar");
-        if (bar) {
-          bar.style.width = bar.getAttribute("data-percentage") + "%";
-        }
-      };
+  cards.forEach(card => {
+    card.classList.remove("opacity-0", "translate-y-10");
+    card.classList.add("opacity-100", "translate-y-0");
 
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            reveal();
-            observer.unobserve(card);
-          }
-        });
-      }, { threshold: 0.2 });
+    const bar = card.querySelector(".proficiency-bar");
+    if (bar) {
+      bar.style.width = bar.getAttribute("data-percentage") + "%";
+    }
+  });
+}
 
-      // 🧠 Extra: check if already in view on load
-      const rect = card.getBoundingClientRect();
-      const isInView = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
-
-      if (isInView) {
-        reveal(); // 👈 Immediately reveal
-      } else {
-        observer.observe(card); // 👈 Wait for scroll to trigger
-      }
-    });
-  }
 
 
     function animateOnScrollOnce() {
