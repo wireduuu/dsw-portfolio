@@ -667,26 +667,40 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+    const cards = document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div");
+
+    cards.forEach(card => {
+      const reveal = () => {
+        card.classList.remove("opacity-0", "translate-y-10");
+        card.classList.add("opacity-100", "translate-y-0");
+
+        const bar = card.querySelector(".proficiency-bar");
+        if (bar) {
+          bar.style.width = bar.getAttribute("data-percentage") + "%";
+        }
+      };
+
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
-
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-            }
-
-            observer.unobserve(entry.target); // Avoid retriggers
+            reveal();
+            observer.unobserve(card);
           }
         });
       }, { threshold: 0.2 });
 
-      observer.observe(card);
+      // 🧠 Extra: check if already in view on load
+      const rect = card.getBoundingClientRect();
+      const isInView = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+
+      if (isInView) {
+        reveal(); // 👈 Immediately reveal
+      } else {
+        observer.observe(card); // 👈 Wait for scroll to trigger
+      }
     });
   }
+
 
     function animateOnScrollOnce() {
       document.querySelectorAll(".proficiency-count strong").forEach(el => {
