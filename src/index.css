@@ -185,7 +185,6 @@ nav a.active {
 .skillsSwiper {
   width: 100%;
   padding-bottom: 40px; /* Space for pagination */
-  min-height: 400px;
 }
 
 .skillsSwiper .swiper-slide {
@@ -235,18 +234,8 @@ nav a.active {
 
 /* Ensure cards maintain consistent height */
 .skillsSwiper .swiper-slide > div {
-  opacity: 1 !important;
-  transform: none !important;
-  height: auto !important;
-  display: flex !important;
-  flex-direction: column;
-  visibility: visible !important;
-  animation: none !important;
-  background-color: rgba(0, 255, 0, 0.1); /* Light green for testing */
-  min-height: 200px;
-  border: 1px dashed lime;
+  height: 100%;
 }
-
 
 .swiper-slide {
   display: flex;
@@ -314,8 +303,8 @@ nav a.active {
 
 /* --- Slide Base Animation State --- */
 .skillsSwiper .swiper-slide {
-  opacity: 1 !important;
-  animation: none !important;
+  opacity: 0;
+  animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* --- Staggered Animations for Visual Depth --- */
@@ -383,18 +372,4 @@ nav a.active {
 
 .dark .proficiency-text {
   color: #f97316; /* Tailwind orange-400 for dark mode */
-}
-
-/* TEMP FIX: Force-reveal skill cards */
-.skillsSwiper .swiper-slide,
-.skillsSwiper .swiper-slide > div {
-  opacity: 1 !important;
-  transform: none !important;
-  display: flex !important;
-  visibility: visible !important;
-  animation: none !important;
-}
-.skillsSwiper .swiper-slide > div {
-  background-color: rgba(0, 255, 0, 0.1); /* debug highlight */
-  min-height: 200px;
 }

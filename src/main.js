@@ -516,9 +516,6 @@ sections.forEach(section => sectionObserver.observe(section));
 
     let skillsSwiperInstance;
 
-    let skillsAnimated = false; 
-
-
 function createSkillCard(skill) {
   const skillCard = document.createElement("div");
   skillCard.className =
@@ -572,13 +569,9 @@ function createSkillCard(skill) {
 }
 
 function renderSkills(category = "all") {
-  console.log("🔍 renderSkills() called with category:", category);
-
   const filtered = category === "all"
     ? skillsData
     : skillsData.filter(skill => skill.category === category);
-
-  console.log("📦 Filtered skills count:", filtered.length);
 
   const skillsGrid = document.getElementById("skillsGrid");
   const swiperWrapper = document.getElementById("skillsSwiperWrapper");
@@ -586,34 +579,29 @@ function renderSkills(category = "all") {
   const pagination = document.querySelector(".skills-swiper-pagination");
 
   const isMobile = window.innerWidth < 768;
-  console.log("📱 Is Mobile?", isMobile);
 
   // Reset containers
   skillsGrid.innerHTML = "";
   swiperWrapper.innerHTML = "";
 
   if (isMobile) {
-    console.log("🔧 Rendering swiper layout...");
-
-    // Mobile View
+    // ✅ Mobile View: Show swiper
     skillsGrid.classList.add("hidden");
     swiperContainer?.classList.remove("hidden");
     pagination?.classList.remove("hidden");
 
+    // Build Swiper slides (2x2 layout: 4 per slide)
     for (let i = 0; i < filtered.length; i += 4) {
       const slide = document.createElement("div");
       slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
       filtered.slice(i, i + 4).forEach(skill => {
-        const card = createSkillCard(skill);
-        slide.appendChild(card);
-        console.log(`✅ Appended card for: ${skill.name}`);
+        slide.appendChild(createSkillCard(skill));
       });
       swiperWrapper.appendChild(slide);
     }
 
-    console.log("🌀 Initializing Swiper...");
+    // Initialize Swiper
     if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
-
     skillsSwiperInstance = new Swiper(".skillsSwiper", {
       slidesPerView: 1,
       spaceBetween: 24,
@@ -625,13 +613,12 @@ function renderSkills(category = "all") {
     });
 
   } else {
-    // Desktop View
-    console.log("🖥️ Rendering grid layout...");
-
+    // Desktop View: Show grid
     swiperContainer?.classList.add("hidden");
     pagination?.classList.add("hidden");
     skillsGrid.classList.remove("hidden");
 
+    // Destroy Swiper and clean state
     if (skillsSwiperInstance) {
       skillsSwiperInstance.destroy(true, true);
       skillsSwiperInstance = null;
@@ -639,21 +626,17 @@ function renderSkills(category = "all") {
       pagination.innerHTML = "";
     }
 
+    // Render cards in grid
     filtered.forEach(skill => {
-      const card = createSkillCard(skill);
-      skillsGrid.appendChild(card);
-      console.log(`✅ Appended grid card for: ${skill.name}`);
+      skillsGrid.appendChild(createSkillCard(skill));
     });
   }
 
-  if (!skillsAnimated) {
-    console.log("✨ Triggering animations for the first time...");
-    skillsAnimated = true;
-    requestAnimationFrame(() => {
-      triggerAnimationsOnce();
-      animateOnScrollOnce();
-    });
-  }
+  // Trigger animations once
+  requestAnimationFrame(() => {
+    triggerAnimationsOnce();
+    animateOnScrollOnce();
+  });
 }
 
 let resizeTimer;
@@ -667,22 +650,26 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-  console.log("🔥 Forcing skill card visibility now...");
+    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-10");
+            entry.target.classList.add("opacity-100", "translate-y-0");
 
-  const cards = document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div");
+            const bar = entry.target.querySelector(".proficiency-bar");
+            if (bar) {
+              bar.style.width = bar.getAttribute("data-percentage") + "%";
+            }
 
-  cards.forEach(card => {
-    card.classList.remove("opacity-0", "translate-y-10");
-    card.classList.add("opacity-100", "translate-y-0");
+            observer.unobserve(entry.target); // Avoid retriggers
+          }
+        });
+      }, { threshold: 0.2 });
 
-    const bar = card.querySelector(".proficiency-bar");
-    if (bar) {
-      bar.style.width = bar.getAttribute("data-percentage") + "%";
-    }
-  });
-}
-
-
+      observer.observe(card);
+    });
+  }
 
     function animateOnScrollOnce() {
       document.querySelectorAll(".proficiency-count strong").forEach(el => {
@@ -1024,11 +1011,3 @@ window.addEventListener("resize", () => {
         loop: true,
     });
 });
-
-
-console.log = function(msg) {
-  const el = document.createElement("div");
-  el.style = "position: fixed; top: 0; left: 0; background: yellow; color: black; font-size: 14px; z-index: 9999;";
-  el.innerText = msg;
-  document.body.appendChild(el);
-};
