@@ -572,9 +572,13 @@ function createSkillCard(skill) {
 }
 
 function renderSkills(category = "all") {
+  console.log("🔍 renderSkills() called with category:", category);
+
   const filtered = category === "all"
     ? skillsData
     : skillsData.filter(skill => skill.category === category);
+
+  console.log("📦 Filtered skills count:", filtered.length);
 
   const skillsGrid = document.getElementById("skillsGrid");
   const swiperWrapper = document.getElementById("skillsSwiperWrapper");
@@ -582,29 +586,34 @@ function renderSkills(category = "all") {
   const pagination = document.querySelector(".skills-swiper-pagination");
 
   const isMobile = window.innerWidth < 768;
+  console.log("📱 Is Mobile?", isMobile);
 
   // Reset containers
   skillsGrid.innerHTML = "";
   swiperWrapper.innerHTML = "";
 
   if (isMobile) {
-    // ✅ Mobile View: Show swiper
+    console.log("🔧 Rendering swiper layout...");
+
+    // Mobile View
     skillsGrid.classList.add("hidden");
     swiperContainer?.classList.remove("hidden");
     pagination?.classList.remove("hidden");
 
-    // Build Swiper slides (2x2 layout: 4 per slide)
     for (let i = 0; i < filtered.length; i += 4) {
       const slide = document.createElement("div");
       slide.className = "swiper-slide grid grid-cols-2 gap-4 px-2 pb-6";
       filtered.slice(i, i + 4).forEach(skill => {
-        slide.appendChild(createSkillCard(skill));
+        const card = createSkillCard(skill);
+        slide.appendChild(card);
+        console.log(`✅ Appended card for: ${skill.name}`);
       });
       swiperWrapper.appendChild(slide);
     }
 
-    // Initialize Swiper
+    console.log("🌀 Initializing Swiper...");
     if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+
     skillsSwiperInstance = new Swiper(".skillsSwiper", {
       slidesPerView: 1,
       spaceBetween: 24,
@@ -616,12 +625,13 @@ function renderSkills(category = "all") {
     });
 
   } else {
-    // Desktop View: Show grid
+    // Desktop View
+    console.log("🖥️ Rendering grid layout...");
+
     swiperContainer?.classList.add("hidden");
     pagination?.classList.add("hidden");
     skillsGrid.classList.remove("hidden");
 
-    // Destroy Swiper and clean state
     if (skillsSwiperInstance) {
       skillsSwiperInstance.destroy(true, true);
       skillsSwiperInstance = null;
@@ -629,13 +639,15 @@ function renderSkills(category = "all") {
       pagination.innerHTML = "";
     }
 
-    // Render cards in grid
     filtered.forEach(skill => {
-      skillsGrid.appendChild(createSkillCard(skill));
+      const card = createSkillCard(skill);
+      skillsGrid.appendChild(card);
+      console.log(`✅ Appended grid card for: ${skill.name}`);
     });
   }
 
-    if (!skillsAnimated) {
+  if (!skillsAnimated) {
+    console.log("✨ Triggering animations for the first time...");
     skillsAnimated = true;
     requestAnimationFrame(() => {
       triggerAnimationsOnce();
@@ -643,7 +655,6 @@ function renderSkills(category = "all") {
     });
   }
 }
-
 
 let resizeTimer;
 window.addEventListener("resize", () => {
