@@ -516,6 +516,9 @@ sections.forEach(section => sectionObserver.observe(section));
 
     let skillsSwiperInstance;
 
+    let skillsAnimated = false; 
+
+
 function createSkillCard(skill) {
   const skillCard = document.createElement("div");
   skillCard.className =
@@ -632,12 +635,15 @@ function renderSkills(category = "all") {
     });
   }
 
-  // Trigger animations once
-  requestAnimationFrame(() => {
-    triggerAnimationsOnce();
-    animateOnScrollOnce();
-  });
+    if (!skillsAnimated) {
+    skillsAnimated = true;
+    requestAnimationFrame(() => {
+      triggerAnimationsOnce();
+      animateOnScrollOnce();
+    });
+  }
 }
+
 
 let resizeTimer;
 window.addEventListener("resize", () => {
