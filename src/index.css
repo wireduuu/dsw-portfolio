@@ -235,9 +235,18 @@ nav a.active {
 
 /* Ensure cards maintain consistent height */
 .skillsSwiper .swiper-slide > div {
-  height: 100%;
-  background: rgba(255, 0, 0, 0.05); /* subtle red background */
+  opacity: 1 !important;
+  transform: none !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column;
+  visibility: visible !important;
+  animation: none !important;
+  background-color: rgba(0, 255, 0, 0.1); /* Light green for testing */
+  min-height: 200px;
+  border: 1px dashed lime;
 }
+
 
 .swiper-slide {
   display: flex;
@@ -305,8 +314,8 @@ nav a.active {
 
 /* --- Slide Base Animation State --- */
 .skillsSwiper .swiper-slide {
-  opacity: 0;
-  animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 1 !important;
+  animation: none !important;
 }
 
 /* --- Staggered Animations for Visual Depth --- */
