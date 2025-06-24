@@ -384,3 +384,17 @@ nav a.active {
 .dark .proficiency-text {
   color: #f97316; /* Tailwind orange-400 for dark mode */
 }
+
+/* TEMP FIX: Force-reveal skill cards */
+.skillsSwiper .swiper-slide,
+.skillsSwiper .swiper-slide > div {
+  opacity: 1 !important;
+  transform: none !important;
+  display: flex !important;
+  visibility: visible !important;
+  animation: none !important;
+}
+.skillsSwiper .swiper-slide > div {
+  background-color: rgba(0, 255, 0, 0.1); /* debug highlight */
+  min-height: 200px;
+}
