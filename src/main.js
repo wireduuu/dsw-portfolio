@@ -1028,3 +1028,11 @@ window.addEventListener("resize", () => {
         loop: true,
     });
 });
+
+
+console.log = function(msg) {
+  const el = document.createElement("div");
+  el.style = "position: fixed; top: 0; left: 0; background: yellow; color: black; font-size: 14px; z-index: 9999;";
+  el.innerText = msg;
+  document.body.appendChild(el);
+};
