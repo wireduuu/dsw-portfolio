@@ -358,12 +358,18 @@ nav a.active {
 }
 
 .proficiency-bar {
-  transition: width 1.2s ease-in-out;
+  transition: width 1.2s ease-in-out !important;
   background-color: rgba(99, 102, 241, 1); /* indigo for light mode */
+  will-change: width;
 }
 
 .dark .proficiency-bar {
   background-color: #f97316; /* Tailwind orange-500 for dark mode */
+}
+
+.proficiency-count strong {
+  display: inline-block;
+  min-width: 40px;
 }
 
 .proficiency-text {

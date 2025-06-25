@@ -565,6 +565,8 @@ function createSkillCard(skill) {
     </div>
   `;
 
+  skillCard.setAttribute('data-animated', 'false');
+
   return skillCard;
 }
 
@@ -577,6 +579,10 @@ function renderSkills(category = "all") {
   const swiperWrapper = document.getElementById("skillsSwiperWrapper");
   const swiperContainer = document.querySelector(".skillsSwiper");
   const pagination = document.querySelector(".skills-swiper-pagination");
+
+   document.querySelectorAll('[data-animated]').forEach(el => {
+    el.dataset.animated = 'false';
+  });
 
   const isMobile = window.innerWidth < 768;
 
@@ -610,6 +616,11 @@ function renderSkills(category = "all") {
         el: ".skills-swiper-pagination",
         clickable: true,
       },
+      // Prevent DOM recycling
+      virtual: false,
+      observer: true,
+      observeParents: true,
+      observeSlideChildren: true
     });
 
   } else {
@@ -650,50 +661,57 @@ window.addEventListener("resize", () => {
 
 
   function triggerAnimationsOnce() {
-    document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-            entry.target.classList.add("opacity-100", "translate-y-0");
+  document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+    // Skip if already animated
+    if (card.dataset.animated === 'true') return;
+    
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-10");
+          entry.target.classList.add("opacity-100", "translate-y-0");
 
-            const bar = entry.target.querySelector(".proficiency-bar");
-            if (bar) {
-              bar.style.width = bar.getAttribute("data-percentage") + "%";
-            }
-
-            observer.unobserve(entry.target); // Avoid retriggers
+          const bar = entry.target.querySelector(".proficiency-bar");
+          if (bar) {
+            bar.style.width = bar.getAttribute("data-percentage") + "%";
           }
-        });
-      }, { threshold: 0.2 });
 
-      observer.observe(card);
-    });
-  }
-
-    function animateOnScrollOnce() {
-      document.querySelectorAll(".proficiency-count strong").forEach(el => {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              let count = 0;
-              const target = parseInt(entry.target.dataset.count, 10);
-              const interval = setInterval(() => {
-                if (count < target) {
-                  count++;
-                  entry.target.textContent = count + "%";
-                } else {
-                  clearInterval(interval);
-                }
-              }, 15);
-              observer.unobserve(entry.target); // Important
-            }
-          });
-        }, { threshold: 0.5 });
-
-        observer.observe(el);
+          // Mark as animated
+          entry.target.dataset.animated = 'true';
+          observer.unobserve(entry.target);
+        }
       });
-    }
+    }, { threshold: 0.2 });
+
+    observer.observe(card);
+  });
+}
+
+function animateOnScrollOnce() {
+  document.querySelectorAll(".proficiency-count strong").forEach(el => {
+    // Skip if already animated
+    if (el.dataset.animated === 'true') return;
+    
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          let count = 0;
+          const target = parseInt(entry.target.dataset.count, 10);
+          const interval = setInterval(() => {
+            if (count >= target) {
+              clearInterval(interval);
+              entry.target.dataset.animated = 'true';
+            }
+          }, 15);
+          
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    observer.observe(el);
+  });
+}
 
   // Initial render
   renderSkills(); 
