@@ -260,6 +260,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const filtered = category === "all" ? projects : projects.filter(p => p.category === category);
 
+    // Show 'Coming Soon' if no projects in this category
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col justify-center items-center p-6">
+          <div class="text-center">
+            <h4 class="text-2xl font-semibold text-gray-600 dark:text-gray-200 mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400 transition-colors duration-300">Coming Soon</h4>
+            <p class="text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto">Projects for this category will be added soon. Stay tuned!</p>
+          </div>
+        </div>
+      `;
+      if (swiper) swiper.destroy(true, true);
+      return;
+    }
+
     const slideHTML = filtered.map(project => {
       if (project.comingSoon) {
         return `
@@ -588,6 +602,38 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reset containers
     skillsGrid.innerHTML = "";
     swiperWrapper.innerHTML = "";
+
+    // Show 'Coming Soon' if no skills in this category
+    if (filtered.length === 0) {
+      if (isMobile) {
+        const slide = document.createElement("div");
+        slide.className = "swiper-slide flex items-center justify-center h-40";
+        slide.innerHTML = `
+          <div class="flex flex-col items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
+            <span class="text-2xl font-semibold text-gray-500 dark:text-gray-300">Coming Soon</span>
+          </div>
+        `;
+        swiperWrapper.appendChild(slide);
+        // Initialize Swiper as usual
+        if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
+        skillsSwiperInstance = new Swiper(".skillsSwiper", {
+          slidesPerView: 1,
+          spaceBetween: 24,
+          autoHeight: true,
+          pagination: {
+            el: ".skills-swiper-pagination",
+            clickable: true,
+          },
+        });
+      } else {
+        skillsGrid.innerHTML = `
+          <div class="flex flex-col items-center justify-center w-full h-40 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
+            <span class="text-2xl font-semibold text-gray-500 dark:text-gray-300">Coming Soon</span>
+          </div>
+        `;
+      }
+      return;
+    }
 
     if (isMobile) {
       // ✅ Mobile View: Show swiper
