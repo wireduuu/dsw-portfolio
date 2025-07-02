@@ -222,16 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
       demo: "https://your-demo-link.com",
     },
     {
-      title: "Tailor App",
-      category: "mobile",
-      image: "/images/tailor.jpg",
-      description:
-        "A specialized mobile app for fashion designers and tailors to efficiently manage clients, fabrics, and custom orders. The app allows users to store accurate measurements, attach fabric images, assign deadlines, and monitor balances. Built with Flutter and Firebase, it supports real-time updates, push notifications, and secure cloud data handling. Designed to prevent fabric mix-ups and improve workflow, the platform enhances productivity and customer satisfaction with its sleek, intuitive interface. An upcoming update will include visual dress previews.",
-      tech: ["Flutter", "Firebase"],
-      github: "https://github.com/your-fashion-app",
-      demo: "https://your-demo-link.com",
-    },
-    {
       title: "Healthcare DBMS",
       category: "web",
       image: "/images/phpMyAdmin.png",
@@ -270,27 +260,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const filtered = category === "all" ? projects : projects.filter(p => p.category === category);
 
-    const slideHTML = filtered.map(project => `
-      <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col">
-        <div class="relative overflow-hidden">
-          <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
-        </div>
-        <div class="p-5 flex flex-col flex-1">
-          <div class="flex justify-between items-start mb-3">
-            <i class="fas fa-folder-open text-orange-400 text-xl"></i>
-            <div class="flex gap-3 text-gray-400 text-lg">
-              ${project.github !== "#" ? `<a href="${project.github}" target="_blank"><i class="fas fa-code-branch"></i></a>` : ""}
-              ${project.demo !== "#" ? `<a href="${project.demo}" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ""}
+    const slideHTML = filtered.map(project => {
+      if (project.comingSoon) {
+        return `
+          <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md group flex flex-col justify-center items-center">
+            <div class="relative overflow-hidden w-full">
+              <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div class="p-5 flex flex-col flex-1 justify-center items-center">
+              <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400 text-center">${project.title}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 text-center">${project.description}</p>
             </div>
           </div>
-          <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400">${project.title}</h4>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">${project.description}</p>
-          <div class="mt-auto flex flex-wrap gap-2">
-            ${project.tech.map(t => `<span class="bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-white text-xs px-2 py-1 rounded-full font-medium">${t}</span>`).join("")}
+        `;
+      }
+      return `
+        <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col">
+          <div class="relative overflow-hidden">
+            <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <div class="flex justify-between items-start mb-3">
+              <i class="fas fa-folder-open text-orange-400 text-xl"></i>
+              <div class="flex gap-3 text-gray-400 text-lg">
+                ${project.github !== "#" ? `<a href="${project.github}" target="_blank"><i class="fas fa-code-branch"></i></a>` : ""}
+                ${project.demo !== "#" ? `<a href="${project.demo}" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ""}
+              </div>
+            </div>
+            <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400">${project.title}</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">${project.description}</p>
+            <div class="mt-auto flex flex-wrap gap-2">
+              ${project.tech.map(t => `<span class="bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-white text-xs px-2 py-1 rounded-full font-medium">${t}</span>`).join("")}
+            </div>
           </div>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
 
     grid.innerHTML = slideHTML;
 
