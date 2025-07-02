@@ -1000,10 +1000,10 @@ window.addEventListener("resize", () => {
     new Typed("#typed-text", {
         strings: [
             "Computer Science &amp; Engineering Major",
-            "Frontend Developer",
+            "Software Engineer",
+            "Full Stack Web Developer",
             "UI/UX Designer",
-            "Backend Engineer",
-            "Freelance Publisher",
+            "Freelance Writer",
         ],
         typeSpeed: 50,
         backSpeed: 30,
