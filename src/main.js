@@ -222,6 +222,16 @@ document.addEventListener("DOMContentLoaded", () => {
       demo: "https://your-demo-link.com",
     },
     {
+      title: "Tailor App",
+      category: "mobile",
+      image: "/images/tailor.jpg",
+      description:
+        "A specialized mobile app for fashion designers and tailors to efficiently manage clients, fabrics, and custom orders. The app allows users to store accurate measurements, attach fabric images, assign deadlines, and monitor balances. Built with Flutter and Firebase, it supports real-time updates, push notifications, and secure cloud data handling. Designed to prevent fabric mix-ups and improve workflow, the platform enhances productivity and customer satisfaction with its sleek, intuitive interface. An upcoming update will include visual dress previews.",
+      tech: ["Flutter", "Firebase"],
+      github: "https://github.com/your-fashion-app",
+      demo: "https://your-demo-link.com",
+    },
+    {
       title: "Healthcare DBMS",
       category: "web",
       image: "/images/phpMyAdmin.png",
@@ -260,56 +270,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const filtered = category === "all" ? projects : projects.filter(p => p.category === category);
 
-    // Show 'Coming Soon' if no projects in this category
-    if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col justify-center items-center p-6">
-          <div class="text-center">
-            <h4 class="text-2xl font-semibold text-gray-600 dark:text-gray-200 mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400 transition-colors duration-300">Coming Soon</h4>
-            <p class="text-sm text-gray-500 dark:text-gray-400 max-w-xs mx-auto">Projects for this category will be added soon. Stay tuned!</p>
+    const slideHTML = filtered.map(project => `
+      <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col">
+        <div class="relative overflow-hidden">
+          <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <div class="flex justify-between items-start mb-3">
+            <i class="fas fa-folder-open text-orange-400 text-xl"></i>
+            <div class="flex gap-3 text-gray-400 text-lg">
+              ${project.github !== "#" ? `<a href="${project.github}" target="_blank"><i class="fas fa-code-branch"></i></a>` : ""}
+              ${project.demo !== "#" ? `<a href="${project.demo}" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ""}
+            </div>
+          </div>
+          <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400">${project.title}</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">${project.description}</p>
+          <div class="mt-auto flex flex-wrap gap-2">
+            ${project.tech.map(t => `<span class="bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-white text-xs px-2 py-1 rounded-full font-medium">${t}</span>`).join("")}
           </div>
         </div>
-      `;
-      if (swiper) swiper.destroy(true, true);
-      return;
-    }
-
-    const slideHTML = filtered.map(project => {
-      if (project.comingSoon) {
-        return `
-          <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md group flex flex-col justify-center items-center">
-            <div class="relative overflow-hidden w-full">
-              <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
-            </div>
-            <div class="p-5 flex flex-col flex-1 justify-center items-center">
-              <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400 text-center">${project.title}</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 text-center">${project.description}</p>
-            </div>
-          </div>
-        `;
-      }
-      return `
-        <div class="swiper-slide transition-all duration-300 ease-in-out bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-md hover:shadow-lg group flex flex-col">
-          <div class="relative overflow-hidden">
-            <img src="${project.image}" alt="${project.title}" class="w-full h-52 object-cover rounded-t-xl group-hover:scale-105 transition-transform duration-500" />
-          </div>
-          <div class="p-5 flex flex-col flex-1">
-            <div class="flex justify-between items-start mb-3">
-              <i class="fas fa-folder-open text-orange-400 text-xl"></i>
-              <div class="flex gap-3 text-gray-400 text-lg">
-                ${project.github !== "#" ? `<a href="${project.github}" target="_blank"><i class="fas fa-code-branch"></i></a>` : ""}
-                ${project.demo !== "#" ? `<a href="${project.demo}" target="_blank"><i class="fas fa-external-link-alt"></i></a>` : ""}
-              </div>
-            </div>
-            <h4 class="text-lg font-semibold mb-2 group-hover:text-indigo-600 dark:group-hover:text-orange-400">${project.title}</h4>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">${project.description}</p>
-            <div class="mt-auto flex flex-wrap gap-2">
-              ${project.tech.map(t => `<span class="bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-white text-xs px-2 py-1 rounded-full font-medium">${t}</span>`).join("")}
-            </div>
-          </div>
-        </div>
-      `;
-    }).join("");
+      </div>
+    `).join("");
 
     grid.innerHTML = slideHTML;
 
@@ -534,6 +515,9 @@ document.addEventListener("DOMContentLoaded", () => {
   ]; // skillsData array here
 
   let skillsSwiperInstance;
+  let skillsInitialized = false;
+  let animationsTriggered = false;
+  let skillsSectionObserver = null;
 
   function createSkillCard(skill) {
     const skillCard = document.createElement("div");
@@ -584,6 +568,8 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
   `;
 
+    skillCard.setAttribute('data-animated', 'false');
+
     return skillCard;
   }
 
@@ -603,38 +589,6 @@ document.addEventListener("DOMContentLoaded", () => {
     skillsGrid.innerHTML = "";
     swiperWrapper.innerHTML = "";
 
-    // Show 'Coming Soon' if no skills in this category
-    if (filtered.length === 0) {
-      if (isMobile) {
-        const slide = document.createElement("div");
-        slide.className = "swiper-slide flex items-center justify-center h-40";
-        slide.innerHTML = `
-          <div class="flex flex-col items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
-            <span class="text-2xl font-semibold text-gray-500 dark:text-gray-300">Coming Soon</span>
-          </div>
-        `;
-        swiperWrapper.appendChild(slide);
-        // Initialize Swiper as usual
-        if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
-        skillsSwiperInstance = new Swiper(".skillsSwiper", {
-          slidesPerView: 1,
-          spaceBetween: 24,
-          autoHeight: true,
-          pagination: {
-            el: ".skills-swiper-pagination",
-            clickable: true,
-          },
-        });
-      } else {
-        skillsGrid.innerHTML = `
-          <div class="flex flex-col items-center justify-center w-full h-40 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md">
-            <span class="text-2xl font-semibold text-gray-500 dark:text-gray-300">Coming Soon</span>
-          </div>
-        `;
-      }
-      return;
-    }
-
     if (isMobile) {
       // ✅ Mobile View: Show swiper
       skillsGrid.classList.add("hidden");
@@ -651,17 +605,27 @@ document.addEventListener("DOMContentLoaded", () => {
         swiperWrapper.appendChild(slide);
       }
 
-      // Initialize Swiper
-      if (skillsSwiperInstance) skillsSwiperInstance.destroy(true, true);
-      skillsSwiperInstance = new Swiper(".skillsSwiper", {
-        slidesPerView: 1,
-        spaceBetween: 24,
-        autoHeight: true,
-        pagination: {
-          el: ".skills-swiper-pagination",
-          clickable: true,
-        },
-      });
+      // Initialize Swiper only once
+      if (!skillsInitialized) {
+        skillsSwiperInstance = new Swiper(".skillsSwiper", {
+          slidesPerView: 1,
+          spaceBetween: 24,
+          autoHeight: true,
+          pagination: {
+            el: ".skills-swiper-pagination",
+            clickable: true,
+          },
+          // Prevent DOM recycling and unnecessary updates
+          virtual: false,
+          observer: false,
+          observeParents: false,
+          observeSlideChildren: false
+        });
+        skillsInitialized = true;
+      } else if (skillsSwiperInstance) {
+        // Update existing swiper without destroying
+        skillsSwiperInstance.update();
+      }
 
     } else {
       // Desktop View: Show grid
@@ -673,6 +637,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (skillsSwiperInstance) {
         skillsSwiperInstance.destroy(true, true);
         skillsSwiperInstance = null;
+        skillsInitialized = false;
         swiperContainer?.classList.remove("swiper-initialized", "swiper-backface-hidden");
         pagination.innerHTML = "";
       }
@@ -682,32 +647,53 @@ document.addEventListener("DOMContentLoaded", () => {
         skillsGrid.appendChild(createSkillCard(skill));
       });
     }
-
-    // Trigger animations once
-    requestAnimationFrame(() => {
-      triggerAnimationsOnce();
-      animateOnScrollOnce();
-    });
   }
 
   let resizeTimer;
-  let lastIsMobile = window.innerWidth < 768;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      const isMobile = window.innerWidth < 768;
-      if (isMobile !== lastIsMobile) {
-        lastIsMobile = isMobile;
-        const activeCategory = document.querySelector(".skill-filter.active")?.dataset.category || "all";
-        renderSkills(activeCategory);
+      const activeCategory = document.querySelector(".skill-filter.active")?.dataset.category || "all";
+      const wasAnimationsTriggered = animationsTriggered; // Preserve animation state
+
+      renderSkills(activeCategory);
+
+      // If animations were already triggered, apply them immediately to new cards
+      if (wasAnimationsTriggered) {
+        requestAnimationFrame(() => {
+          document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+            if (card.dataset.animated !== 'true') {
+              card.classList.remove("opacity-0", "translate-y-10");
+              card.classList.add("opacity-100", "translate-y-0");
+              card.dataset.animated = 'true';
+
+              const bar = card.querySelector(".proficiency-bar");
+              if (bar) {
+                bar.style.width = bar.getAttribute("data-percentage") + "%";
+              }
+
+              const countEl = card.querySelector(".proficiency-count strong");
+              if (countEl && countEl.dataset.animated !== 'true') {
+                const target = parseInt(countEl.dataset.count, 10);
+                countEl.textContent = target + "%";
+                countEl.dataset.animated = 'true';
+              }
+            }
+          });
+        });
       }
-      // Otherwise, do nothing!
     }, 300);
   });
 
 
   function triggerAnimationsOnce() {
+    // Only trigger if animations haven't been triggered yet
+    if (animationsTriggered) return;
+
     document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+      // Skip if already animated
+      if (card.dataset.animated === 'true') return;
+
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -719,31 +705,43 @@ document.addEventListener("DOMContentLoaded", () => {
               bar.style.width = bar.getAttribute("data-percentage") + "%";
             }
 
-            observer.unobserve(entry.target); // Avoid retriggers
+            // Mark as animated
+            entry.target.dataset.animated = 'true';
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.2 });
 
       observer.observe(card);
     });
+
+    animationsTriggered = true;
   }
 
   function animateOnScrollOnce() {
+    // Only trigger if animations haven't been triggered yet
+    if (animationsTriggered) return;
+
     document.querySelectorAll(".proficiency-count strong").forEach(el => {
+      // Skip if already animated
+      if (el.dataset.animated === 'true') return;
+
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             let count = 0;
             const target = parseInt(entry.target.dataset.count, 10);
             const interval = setInterval(() => {
-              if (count < target) {
+              if (count >= target) {
+                clearInterval(interval);
+                entry.target.dataset.animated = 'true';
+              } else {
                 count++;
                 entry.target.textContent = count + "%";
-              } else {
-                clearInterval(interval);
               }
             }, 15);
-            observer.unobserve(entry.target); // Important
+
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.5 });
@@ -754,6 +752,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial render
   renderSkills();
+
+  // Set up section observer to trigger animations only once when skills section comes into view
+  const skillsSection = document.getElementById("skills");
+  if (skillsSection && !skillsSectionObserver) {
+    skillsSectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !animationsTriggered) {
+          // Trigger animations only once when section comes into view
+          requestAnimationFrame(() => {
+            triggerAnimationsOnce();
+            animateOnScrollOnce();
+          });
+          skillsSectionObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    skillsSectionObserver.observe(skillsSection);
+  }
 
   // Skill filter logic
   document.querySelectorAll(".skill-filter").forEach(btn => {
@@ -774,6 +791,32 @@ document.addEventListener("DOMContentLoaded", () => {
       // Re-render filtered skills
       const selectedCategory = btn.getAttribute("data-category");
       renderSkills(selectedCategory);
+
+      // If animations have already been triggered, apply them immediately to new cards
+      if (animationsTriggered) {
+        requestAnimationFrame(() => {
+          // Apply animations immediately to new cards without observers
+          document.querySelectorAll("#skillsGrid > div, .skillsSwiper .swiper-slide > div").forEach(card => {
+            if (card.dataset.animated !== 'true') {
+              card.classList.remove("opacity-0", "translate-y-10");
+              card.classList.add("opacity-100", "translate-y-0");
+              card.dataset.animated = 'true';
+
+              const bar = card.querySelector(".proficiency-bar");
+              if (bar) {
+                bar.style.width = bar.getAttribute("data-percentage") + "%";
+              }
+
+              const countEl = card.querySelector(".proficiency-count strong");
+              if (countEl && countEl.dataset.animated !== 'true') {
+                const target = parseInt(countEl.dataset.count, 10);
+                countEl.textContent = target + "%";
+                countEl.dataset.animated = 'true';
+              }
+            }
+          });
+        });
+      }
 
       // Scroll back to Skills section (tablet & desktop only)
       const skillsSection = document.getElementById("skills");
@@ -1057,10 +1100,10 @@ document.addEventListener("DOMContentLoaded", () => {
   new Typed("#typed-text", {
     strings: [
       "Computer Science &amp; Engineering Major",
-      "Software Engineer",
-      "Full Stack Web Developer",
+      "Frontend Developer",
       "UI/UX Designer",
-      "Freelance Writer",
+      "Backend Engineer",
+      "Freelance Publisher",
     ],
     typeSpeed: 50,
     backSpeed: 30,
