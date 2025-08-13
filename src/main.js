@@ -887,75 +887,72 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   });
 
+  // Hero Section CV / Resume modal logic
+  const heroOpenCvBtn = document.getElementById("openCvModal");
+  const heroCloseCvBtn = document.getElementById("heroCloseCvModal");
+  const heroCvModal = document.getElementById("heroCvModal");
+  const heroCvIframe = document.getElementById("heroCvIframe");
 
-  // === Resume Modal Handling ===
-  const openBtn = document.getElementById("openResumeModal");
-  const closeBtn = document.getElementById("closeResumeModal");
-  const modal = document.getElementById("resumeModal");
-  const iframe = document.getElementById("resumeIframe");
-  const pdfUrl = "resume/Derrick_Sarfo_Wiredu_Resume.pdf";
+  // URL for CV/Resume PDF
+  const heroCvPdfUrl = "/Derrick_Sarfo_Wiredu_CV.pdf";
 
-  function openModal() {
-    modal.classList.remove("hidden");
-    document.body.classList.add("modal-open");
-
-    // Load iframe once
-    if (!iframe.src) {
-      iframe.src = pdfUrl;
+  heroOpenCvBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    heroCvModal.classList.remove("hidden");
+    if (!heroCvIframe.src) {
+      heroCvIframe.src = heroCvPdfUrl;
+      heroCvIframe.classList.remove("hidden");
     }
-    iframe.classList.remove("hidden");
-  }
+  });
+
+  heroCloseCvBtn.addEventListener("click", () => {
+    heroCvModal.classList.add("hidden");
+    heroCvIframe.src = "";
+    heroCvIframe.classList.add("hidden");
+  });
+
+  heroCvModal.addEventListener("click", (e) => {
+    if (e.target === heroCvModal) {
+      heroCvModal.classList.add("hidden");
+      heroCvIframe.src = "";
+      heroCvIframe.classList.add("hidden");
+    }
+  });
+
+  // download center modal logic
+  const modal = document.getElementById("pdfModal");
+  const iframe = document.getElementById("pdfIframe");
+  const closeBtn = document.getElementById("closePdfModal");
+  const modalTitle = document.getElementById("pdfModalTitle");
+
+  document.querySelectorAll(".openPdfBtn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const pdfUrl = btn.dataset.pdf;
+      const isResume = pdfUrl.toLowerCase().includes("resume");
+      modalTitle.textContent = isResume ? "My Resume" : "My Curriculum Vitae";
+      iframe.src = pdfUrl;
+      iframe.classList.remove("hidden");
+      modal.classList.remove("hidden");
+      document.body.classList.add("modal-open");
+    });
+  });
 
   function closeModal() {
     modal.classList.add("hidden");
-    document.body.classList.remove("modal-open");
-    iframe.src = ""; // Clear the PDF
+    iframe.src = "";
     iframe.classList.add("hidden");
-    // Optional: scroll back to Download Center
+    document.body.classList.remove("modal-open");
     document.getElementById("download").scrollIntoView({ behavior: "smooth" });
   }
 
+  closeBtn.addEventListener("click", closeModal);
 
-  openBtn?.addEventListener("click", (e) => {
-    e.preventDefault(); // ✅ Prevent default anchor behavior
-    openModal();
-  });
-
-  closeBtn?.addEventListener("click", () => closeModal());
-
-  modal?.addEventListener("click", (e) => {
+  modal.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
   });
 
-  // === CV Modal Handling ===
-  const openCvBtn = document.getElementById("openCvModal");
-  const closeCvBtn = document.getElementById("closeCvModal");
-  const cvModal = document.getElementById("cvModal");
-  const cvIframe = document.getElementById("cvIframe");
-  const cvPdfUrl = "/cv/Derrick_Sarfo_Wiredu_CV.pdf";
-
-  openCvBtn?.addEventListener("click", () => {
-    cvModal.classList.remove("hidden");
-    if (!cvIframe.src) {
-      cvIframe.src = cvPdfUrl;
-      cvIframe.classList.remove("hidden");
-    }
-  });
-
-  closeCvBtn?.addEventListener("click", () => {
-    cvModal.classList.add("hidden");
-    cvIframe.src = "";
-    cvIframe.classList.add("hidden");
-  });
-
-  cvModal?.addEventListener("click", (e) => {
-    if (e.target === cvModal) {
-      cvModal.classList.add("hidden");
-      cvIframe.src = "";
-      cvIframe.classList.add("hidden");
-    }
-  });
-
+  
   // Resume/CV filter buttons
   function isMobileView() {
     return window.innerWidth < 768;

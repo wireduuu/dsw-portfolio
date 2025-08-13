@@ -262,7 +262,8 @@
           </a>
 
           <a
-            href="Derrick_Sarfo_Wiredu_CV.pdf"
+            id="openCvModal"
+            href="#"
             class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-200 rounded-full font-semibold transition duration-300 text-sm sm:text-base"
           >
             <!-- Download Icon -->
@@ -280,7 +281,7 @@
                 d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"
               />
             </svg>
-            Download CV / Resume
+            View CV / Resume
           </a>
         </div>
       </div>
@@ -696,9 +697,7 @@
       data-aos="fade-up"
     >
       <div class="max-w-6xl mx-auto">
-        <h2
-          class="text-4xl font-bold mb-6 text-indigo-600 dark:text-indigo-400"
-        >
+        <h2 class="text-4xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">
           Download Center
         </h2>
         <p class="mb-10 text-lg text-gray-600 dark:text-gray-400">
@@ -721,9 +720,7 @@
             class="resume-cv-card bg-white/30 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:scale-[1.01] w-full lg:w-auto"
           >
             <div class="flex flex-col items-center gap-4">
-              <i
-                class="fas fa-file-alt text-indigo-600 dark:text-indigo-400 text-5xl"
-              ></i>
+              <i class="fas fa-file-alt text-indigo-600 dark:text-indigo-400 text-5xl"></i>
               <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
                 Resume
               </h3>
@@ -733,8 +730,8 @@
               <div class="flex flex-col sm:flex-row gap-4 pt-2">
                 <!-- Preview Button -->
                 <button
-                  id="openResumeModal"
-                  class="bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 text-white px-5 py-2 rounded-lg font-medium flex items-center gap-2 justify-center"
+                  data-pdf="/resume/Derrick_Sarfo_Wiredu_Resume.pdf"
+                  class="openPdfBtn bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 text-white px-5 py-2 rounded-lg font-medium flex items-center gap-2 justify-center"
                 >
                   <i class="fas fa-eye"></i> Preview
                 </button>
@@ -771,9 +768,7 @@
             class="resume-cv-card bg-white/30 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:scale-[1.01] w-full lg:w-auto"
           >
             <div class="flex flex-col items-center gap-4">
-              <i
-                class="fas fa-file-lines text-indigo-600 dark:text-indigo-400 text-5xl"
-              ></i>
+              <i class="fas fa-file-lines text-indigo-600 dark:text-indigo-400 text-5xl"></i>
               <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
                 Curriculum Vitae
               </h3>
@@ -783,15 +778,15 @@
               <div class="flex flex-col sm:flex-row gap-4 pt-2">
                 <!-- Preview Button -->
                 <button
-                  id="openCvModal"
-                  class="bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 text-white px-5 py-2 rounded-lg font-medium flex items-center gap-2 justify-center"
+                  data-pdf="/Derrick_Sarfo_Wiredu_CV.pdf"
+                  class="openPdfBtn bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 text-white px-5 py-2 rounded-lg font-medium flex items-center gap-2 justify-center"
                 >
                   <i class="fas fa-eye"></i> Preview
                 </button>
 
                 <!-- Download Button -->
                 <a
-                  href="Derrick_Sarfo_Wiredu_CV.pdf"
+                  href="/Derrick_Sarfo_Wiredu_CV.pdf"
                   download
                   class="border border-indigo-600 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-gray-600 dark:hover:text-white px-5 py-2 rounded-lg font-medium flex items-center gap-2 justify-center"
                 >
@@ -815,31 +810,34 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Resume Modal -->
+      
+    <!-- Shared PDF Modal -->
     <div
-      id="resumeModal"
-      class="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center hidden"
+      id="pdfModal"
+      class="hidden fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center"
     >
       <div
         class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 shadow-lg relative"
       >
         <button
-          id="closeResumeModal"
+          id="closePdfModal"
           class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 text-2xl"
         >
           &times;
         </button>
         <div class="p-4 border-b border-gray-300 dark:border-gray-700">
-          <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-            My Resume
+          <h2
+            id="pdfModalTitle"
+            class="text-xl font-semibold text-gray-800 dark:text-gray-100"
+          >
+            PDF Preview
           </h2>
         </div>
         <div class="h-[75vh]">
           <iframe
-            id="resumeIframe"
+            id="pdfIframe"
             width="100%"
             height="100%"
             class="border-none hidden"
@@ -1094,5 +1092,53 @@
         © 2025 wired.u Technologies. All rights reserved.
       </div>
     </footer>
+
+    <!-- Modals -->
+
+    <!-- Hero CV/Resume Modal -->
+    <div
+      id="heroCvModal"
+      class="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center hidden"
+    >
+      <div
+        class="bg-white dark:bg-gray-900 rounded-lg overflow-hidden w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 shadow-lg relative"
+      >
+        <button
+          id="heroCloseCvModal"
+          class="absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500 text-3xl font-bold"
+          aria-label="Close CV Modal"
+        >
+          &times;
+        </button>
+        <div class="p-4 border-b border-gray-300 dark:border-gray-700">
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+            My CV / Resume
+          </h2>
+        </div>
+        <div class="h-[75vh]">
+          <iframe
+            id="heroCvIframe"
+            width="100%"
+            height="100%"
+            class="border-none hidden"
+            title="CV or Resume PDF"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div id="cvModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+      <div class="bg-white dark:bg-gray-900 p-4 rounded-lg max-w-4xl w-full relative">
+        <button id="closeCvModal" class="absolute top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white">
+          ✕
+        </button>
+        <iframe
+          id="cvIframe"
+          src=""
+          class="hidden w-full h-[80vh]"
+          frameborder="0"
+        ></iframe>
+      </div>
+    </div>
   </body>
 </html>
